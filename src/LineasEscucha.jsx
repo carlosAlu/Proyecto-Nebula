@@ -1,4 +1,5 @@
-﻿const info = [
+﻿// Datos principales de líneas de ayuda, emergencia y acompañamiento emocional.
+const info = [
   {
     title: 'Línea Nacional de Emergencia',
     description: ' Atención inmediata y orientación de seguridad.',
@@ -19,6 +20,7 @@
   },
 ]
 
+// Pantalla que presenta las líneas de escucha y números de apoyo disponibles.
 function LineaEscucha() {
   return (
     <div className="page-shell">

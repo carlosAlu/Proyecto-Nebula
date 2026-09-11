@@ -1,4 +1,5 @@
 :root {
+  /* Paleta principal de Nebula: colores institucionales para la identidad visual. */
   --primary-color: #4b1d72;
   --primary-light: #7c3aed;
   --primary-soft: #f4ebff;
@@ -20,11 +21,13 @@
   font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
 }
 
+/* Suaviza el desplazamiento entre secciones cuando se navega con enlaces de ancla. */
 html {
   scroll-behavior: smooth;
 }
 
 body {
+  /* Fondo general de la aplicación para mantener un tema claro y calmado. */
   background:
     radial-gradient(circle at top, rgba(124, 58, 237, 0.12), transparent 30%),
     linear-gradient(180deg, #f9f7ff 0%, #f5f0ff 100%);
@@ -44,6 +47,7 @@ textarea {
   font: inherit;
 }
 
+/* Contenedor central para limitar el ancho de contenido en la web. */
 .container {
   max-width: 1200px;
   margin: 0 auto;
@@ -54,7 +58,7 @@ textarea {
   min-height: 100vh;
 }
 
-/* Header */
+/* Encabezado principal: navegación y acceso rápido a la IA. */
 .header {
   position: sticky;
   top: 0;
@@ -66,11 +70,20 @@ textarea {
 }
 
 .header-container {
+  position: relative;
   display: flex;
   justify-content: space-between;
   align-items: center;
   min-height: 76px;
   gap: 20px;
+}
+
+.header-ai {
+  position: absolute;
+  top: 50%;
+  right: min(22px, calc(622px - 50vw));
+  z-index: 1;
+  transform: translateY(-30%);
 }
 
 .logo {
@@ -81,6 +94,7 @@ textarea {
   font-size: 1.25rem;
   color: var(--primary-color);
   letter-spacing: 0.08em;
+  text-decoration: none;
 }
 
 .logo-icon {
@@ -114,25 +128,46 @@ textarea {
   transform: translateY(-1px);
 }
 
-.emergency-btn {
-  background: linear-gradient(135deg, #ffe4e6, #fee2e2);
-  color: #991b1b;
-  padding: 10px 16px;
+.ai-evaluation-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  padding: 0;
   border-radius: 999px;
-  text-decoration: none;
-  font-weight: 700;
-  font-size: 0.86rem;
-  border: 1px solid rgba(153, 27, 27, 0.12);
-  box-shadow: 0 8px 16px rgba(153, 27, 27, 0.08);
+  border: 0;
+  cursor: pointer;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
+  animation: ai-float 7s steps(210, end) infinite;
 }
 
-.emergency-btn:hover {
+.ai-evaluation-button img {
+  display: block;
+  width: 128px;
+  height: 128px;
+  object-fit: contain;
+}
+
+.ai-evaluation-button:hover {
   transform: translateY(-1px);
-  box-shadow: 0 12px 20px rgba(153, 27, 27, 0.12);
 }
 
-/* Hero */
+@keyframes ai-float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ai-evaluation-button {
+    animation: none;
+  }
+}
+
+/* Hero o sección inicial, con el mensaje principal y CTA del sitio. */
 .hero-section {
   position: relative;
   overflow: hidden;
@@ -346,7 +381,7 @@ h2 {
   max-width: 700px;
 }
 
-/* Ventajas */
+/* Sección de pilares: explica los valores y principios del proyecto. */
 .advantages-section {
   background: rgba(255, 255, 255, 0.6);
 }
@@ -395,7 +430,7 @@ h2 {
   color: var(--text-muted);
 }
 
-/* About */
+/* Sobre Nebula: contexto, misión y visualización de impacto. */
 .about-section {
   background: linear-gradient(180deg, #faf5ff, #f4ebff);
 }
@@ -450,7 +485,7 @@ h2 {
   border-radius: 999px;
 }
 
-/* Servicios */
+/* Servicios: tarjetas de recursos y soluciones disponibles para la comunidad. */
 .services-section {
   background: #fff;
 }
@@ -510,7 +545,7 @@ h2 {
   text-decoration: underline;
 }
 
-/* Proceso */
+/* Acciones rápidas y pasos del proceso de acompañamiento. */
 .quick-actions-section {
   background: #fff;
 }
@@ -609,7 +644,7 @@ h2 {
   font-size: 0.95rem;
 }
 
-/* Impacto */
+/* Impacto: métricas y resultados de apoyo de Nebula. */
 .skills-section {
   background: #fff;
 }
@@ -661,7 +696,7 @@ h2 {
 .p-95 { background: conic-gradient(var(--accent-color) 342deg, #efe7ff 342deg); }
 .p-99 { background: conic-gradient(var(--accent-color) 356deg, #efe7ff 356deg); }
 
-/* Contacto */
+/* Contacto: formulario de contacto y datos de atención. */
 .cta-contact-section {
   background: linear-gradient(135deg, #2a0d4d 0%, #5a1d83 45%, #7c3aed 100%);
   color: white;
@@ -740,7 +775,7 @@ h2 {
   font-size: 0.93rem;
 }
 
-/* Footer */
+/* Footer final con navegación y datos de emergencia. */
 .footer {
   background: #0f172a;
   color: #cbd5e1;
@@ -839,7 +874,7 @@ h2 {
   }
 }
 
-/* Responsive */
+/* Adaptaciones responsive para pantallas medianas y móviles. */
 @media (max-width: 900px) {
   .hero-content,
   .about-grid {
@@ -885,6 +920,7 @@ h2 {
   }
 }
 
+/* Estilos de navegación interna de cada pantalla secundaria. */
 .nav-link {
   text-decoration: none;
   color: var(--text-muted);
@@ -902,6 +938,7 @@ h2 {
   width: 100%;
 }
 
+/* Encabezado de páginas internas con portada destacada. */
 .page-header {
   padding: 86px 0 26px;
   background: linear-gradient(135deg, #2d0f4c 0%, #5b1a8c 35%, #7c3aed 100%);
@@ -928,6 +965,7 @@ h2 {
   padding: 60px 0;
 }
 
+/* Grid reutilizable para tarjetas informativas de cada contenido. */
 .info-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
@@ -961,8 +999,326 @@ h2 {
   font-size: 1.05rem;
 }
 
+.map-section {
+  background: linear-gradient(180deg, #faf5ff, #f3ebff);
+}
+
+/* Mapa y tarjetas de ubicación para centros de ayuda. */
+.map-wrapper {
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid var(--border-color);
+  border-radius: 22px;
+  box-shadow: var(--shadow-card);
+  padding: 24px;
+}
+
+.map-wrapper h2 {
+  margin-bottom: 20px;
+}
+
+.map-wrapper iframe {
+  display: block;
+  width: 100%;
+  border-radius: 16px;
+  min-height: 420px;
+}
+
 .quick-action-card {
   display: block;
   text-decoration: none;
   color: inherit;
+}
+
+/* Login administrativo: diseño de autenticación de panel interno. */
+.admin-login-page {
+  min-height: calc(100vh - 76px);
+  display: grid;
+  grid-template-columns: minmax(0, 0.95fr) minmax(420px, 1.05fr);
+  background: #fff;
+}
+
+.admin-login-visual {
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  padding: 72px clamp(28px, 7vw, 100px);
+  background: linear-gradient(145deg, #29123e 0%, #55206f 52%, #8a286d 100%);
+  color: white;
+}
+
+.admin-login-visual::after {
+  content: '';
+  position: absolute;
+  width: 420px;
+  height: 420px;
+  right: -180px;
+  bottom: -180px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  box-shadow: 0 0 0 44px rgba(255, 255, 255, 0.04), 0 0 0 88px rgba(255, 255, 255, 0.03);
+}
+
+.admin-login-visual-content {
+  position: relative;
+  z-index: 1;
+  max-width: 520px;
+}
+
+.admin-login-mark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 54px;
+  height: 54px;
+  margin-bottom: 58px;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.12);
+  font-size: 1.5rem;
+  font-weight: 800;
+}
+
+.admin-login-visual .eyebrow {
+  margin-bottom: 18px;
+}
+
+.admin-login-visual h1 {
+  max-width: 500px;
+  margin-bottom: 20px;
+  color: white;
+  font-size: clamp(2.3rem, 4vw, 4rem);
+  line-height: 1.08;
+}
+
+.admin-login-visual p {
+  max-width: 460px;
+  color: rgba(255, 255, 255, 0.78);
+  font-size: 1.05rem;
+}
+
+.admin-login-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 42px;
+  padding: 11px 15px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+.admin-login-form-section {
+  display: flex;
+  align-items: center;
+  padding: 64px clamp(28px, 7vw, 110px);
+  background: #fff;
+}
+
+.admin-login-form-wrap {
+  width: min(100%, 460px);
+  margin: 0 auto;
+}
+
+.admin-login-back,
+.admin-login-recovery {
+  border: 0;
+  background: transparent;
+  color: var(--primary-color);
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.admin-login-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 68px;
+  padding: 0;
+}
+
+.admin-login-back:hover,
+.admin-login-recovery:hover {
+  color: var(--accent-hover);
+}
+
+.admin-login-heading .eyebrow {
+  margin-bottom: 14px;
+  padding: 0;
+  background: none;
+  border: 0;
+  color: var(--accent-color);
+}
+
+.admin-login-heading h2 {
+  margin-bottom: 10px;
+  color: var(--primary-color);
+  font-size: clamp(2rem, 3vw, 2.8rem);
+  line-height: 1.1;
+}
+
+.admin-login-heading p {
+  color: var(--text-muted);
+}
+
+.admin-login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 36px;
+}
+
+.admin-login-form > label,
+.admin-login-label-row label {
+  color: var(--text-main);
+  font-size: 0.88rem;
+  font-weight: 700;
+}
+
+.admin-login-form input[type='email'],
+.admin-login-form input[type='password'] {
+  width: 100%;
+  margin-bottom: 12px;
+  padding: 14px 16px;
+  border: 1px solid #d9cfe5;
+  border-radius: 10px;
+  background: #fff;
+  color: var(--text-main);
+  outline: none;
+}
+
+.admin-login-form input[type='email']:focus,
+.admin-login-form input[type='password']:focus {
+  border-color: var(--primary-light);
+  box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.12);
+}
+
+.admin-login-label-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.admin-login-recovery {
+  padding: 0;
+  font-size: 0.78rem;
+}
+
+.admin-login-check {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin: 2px 0 18px;
+  color: var(--text-muted);
+  font-size: 0.86rem;
+  cursor: pointer;
+}
+
+.admin-login-check input {
+  width: 16px;
+  height: 16px;
+  accent-color: var(--primary-light);
+}
+
+.admin-login-submit {
+  width: 100%;
+  padding: 14px 20px;
+  border: 0;
+  border-radius: 10px;
+  background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
+  color: white;
+  cursor: pointer;
+  font-weight: 800;
+  box-shadow: 0 14px 24px rgba(75, 29, 114, 0.2);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.admin-login-submit:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 18px 28px rgba(75, 29, 114, 0.28);
+}
+
+.admin-login-note {
+  margin-top: 24px;
+  color: var(--text-muted);
+  font-size: 0.82rem;
+  text-align: center;
+}
+
+.admin-login-switch {
+  margin-top: 18px;
+  color: var(--text-muted);
+  font-size: 0.88rem;
+  text-align: center;
+}
+
+.admin-login-switch button {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--primary-color);
+  cursor: pointer;
+  font-weight: 800;
+}
+
+.admin-login-switch button:hover {
+  color: var(--accent-hover);
+}
+
+.admin-login-orbit {
+  position: absolute;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 50%;
+}
+
+.orbit-one {
+  width: 280px;
+  height: 280px;
+  top: 12%;
+  right: 8%;
+}
+
+.orbit-two {
+  width: 170px;
+  height: 170px;
+  top: 24%;
+  right: 20%;
+}
+
+@media (max-width: 900px) {
+  .admin-login-page {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-login-visual {
+    min-height: 460px;
+    padding: 56px 28px;
+  }
+
+  .admin-login-form-section {
+    padding: 54px 28px 72px;
+  }
+}
+
+@media (max-width: 520px) {
+  .admin-login-visual {
+    min-height: 420px;
+  }
+
+  .admin-login-mark {
+    margin-bottom: 34px;
+  }
+
+  .admin-login-back {
+    margin-bottom: 48px;
+  }
+
+  .admin-login-label-row {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 6px;
+  }
 }

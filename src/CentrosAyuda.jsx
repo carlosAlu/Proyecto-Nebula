@@ -1,27 +1,36 @@
-﻿const centros = [
+﻿// Lista de organizaciones y centros de apoyo aliados para orientación y atención.
+const centros = [
   {
-    name: 'Casa de Esperanza',
-    city: 'La Paz',
-    phone: '(612) 123-4567',
-    icon: '📍',
-    description: 'Acompañamiento integral, refugio temporal y apoyo legal.',
-  },
-  {
-    name: 'Red de Mujeres',
-    city: 'Los Cabos',
-    phone: '(624) 987-6543',
+    name: 'Centro de Justicia Para Las Mujeres',
+    city: 'La Paz B.C.S.',
+    phone: '(612) 688-1236',
     icon: '🤝',
     description: 'Grupo comunitario con atención psicológica y orientación social.',
   },
   {
-    name: 'Centro de Apoyo Jurídico',
-    city: 'Cabo Pulmo',
-    phone: '(612) 765-4321',
+    name: 'Centro Mujeres',
+    city: 'La Paz B.C.S.',
+    phone: '(612) 122-3342',
+    icon: '⚖️',
+    description: 'Asesoría legal y guía para procedimientos y derechos.',
+  },
+  {
+    name: 'Instituto Municipal de Las Mujeres',
+    city: 'La Paz B.C.S.',
+    phone: '(612) 123-3440',
+    icon: '⚖️',
+    description: 'Asesoría legal y guía para procedimientos y derechos.',
+  },
+  {
+    name: 'Instituto Sudcaliforniano de las Mujeres',
+    city: 'La Paz B.C.S.',
+    phone: '(612) 122-2945',
     icon: '⚖️',
     description: 'Asesoría legal y guía para procedimientos y derechos.',
   },
 ]
 
+// Muestra la red de centros de atención cercanos, con mapa y tarjetas de contacto.
 function CentrosAyuda() {
   return (
     <div className="page-shell">
@@ -35,6 +44,24 @@ function CentrosAyuda() {
         </div>
       </section>
 
+<section className="page-section map-section">
+        <div className="container">
+          <div className="map-wrapper">
+            <h2>Ubicación de centros de apoyo</h2>
+            <iframe
+              src="https://www.google.com/maps/embed?pb=!1m16!1m12!1m3!1d58274.733810085665!2d-110.31914963155035!3d24.095486058925122!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!2m1!1scentros%20de%20ayuda%20para%20la%20mujer!5e0!3m2!1ses!2smx!4v1789064845400!5m2!1ses!2smx"
+              width="100%"
+              height="450"
+              style={{ border: 0 }}
+              allowFullScreen=""
+              loading="lazy"
+              referrerPolicy="strict-origin-when-cross-origin"
+              title="Mapa de centros de ayuda"
+            />
+          </div>
+        </div>
+      </section>
+      
       <section className="page-section">
         <div className="container">
           <div className="info-grid">
@@ -44,13 +71,16 @@ function CentrosAyuda() {
                 <h3>{centro.name}</h3>
                 <p>{centro.description}</p>
                 <span>{centro.city}</span>
-                <strong>{centro.phone}</strong>
+                <a href={`tel:${centro.phone.replace(/\D/g, '')}`}>
+                  {centro.phone}
+                </a>
               </article>
             ))}
           </div>
         </div>
       </section>
     </div>
+    
   )
 }
 

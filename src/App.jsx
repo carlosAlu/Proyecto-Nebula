@@ -1,10 +1,19 @@
-﻿import { useState } from 'react'
+﻿import { useEffect, useState } from 'react'
 import './App.css'
 import LineaEscucha from './LineasEscucha.jsx'
 import CentrosAyuda from './CentrosAyuda.jsx'
 import ModulosPreventivos from './ModulosPreventivos.jsx'
 import RutasLegales from './RutasLegales.jsx'
+import Admin from './Admin.jsx'
+import LoginAdmin from './LoginAdmin.jsx'
+import SingUpAdmin from './SingUpAdmin.jsx'
+import Ayuda from './Ayuda.jsx'
+import Socios from './Socios.jsx'
+import IA from './IA.jsx'
+import miImagen from './assets/Circ_AI.png'
+import miImagenParpadeo from './assets/Circ_Ai_Parpadeo.png'
 
+// Acciones rápidas que aparecen en la home y llevan a cada sección principal de la app.
 const quickActions = [
   {
     title: 'Linea de escucha',
@@ -32,9 +41,64 @@ const quickActions = [
   },
 ]
 
+// Componente principal de Nebula. Gestiona la navegación entre secciones,
+// la vista de inicio y la renderización de pantallas internas.
 function App() {
   const [activePage, setActivePage] = useState('home')
+  const [pendingSection, setPendingSection] = useState(null)
+  const [isAiBlinking, setIsAiBlinking] = useState(false)
 
+  // Efecto para simular el parpadeo de la imagen de IA en el header.
+  useEffect(() => {
+    let blinkTimer
+    let openEyesTimer
+
+    const scheduleBlink = () => {
+      blinkTimer = window.setTimeout(() => {
+        setIsAiBlinking(true)
+        openEyesTimer = window.setTimeout(() => {
+          setIsAiBlinking(false)
+          scheduleBlink()
+        }, 140)
+      }, 2800 + Math.random() * 4200)
+    }
+
+    scheduleBlink()
+
+    return () => {
+      window.clearTimeout(blinkTimer)
+      window.clearTimeout(openEyesTimer)
+    }
+  }, [])
+
+  // Cuando se selecciona una sección desde la home, se desplaza a esa parte de la página.
+  useEffect(() => {
+    if (activePage !== 'home' || !pendingSection) return
+
+    document.getElementById(pendingSection)?.scrollIntoView({ behavior: 'smooth' })
+    setPendingSection(null)
+  }, [activePage, pendingSection])
+
+  // Al cambiar de vista, regresa al inicio de la página si ya no estamos en home.
+  useEffect(() => {
+    if (activePage !== 'home') {
+      window.scrollTo({ top: 0, behavior: 'auto' })
+    }
+  }, [activePage])
+
+  // Navega a una sección dentro de la home sin perder el contexto visual.
+  const navigateToSection = (sectionId) => {
+    setPendingSection(sectionId)
+    setActivePage('home')
+  }
+
+  const navigateHome = () => {
+    setPendingSection(null)
+    setActivePage('home')
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  }
+
+  // Renderiza la pantalla activa según la navegación del usuario.
   const renderPage = () => {
     switch (activePage) {
       case 'linea':
@@ -45,6 +109,18 @@ function App() {
         return <ModulosPreventivos />
       case 'rutas':
         return <RutasLegales />
+      case 'admin':
+        return <Admin />
+      case 'login-admin':
+        return <LoginAdmin onBack={navigateHome} onSignup={() => setActivePage('signup-admin')} />
+      case 'signup-admin':
+        return <SingUpAdmin onBack={navigateHome} onLogin={() => setActivePage('login-admin')} />
+      case 'ayuda':
+        return <Ayuda />
+      case 'socios':
+        return <Socios />
+      case 'ia':
+        return <IA />
       case 'home':
       default:
         return (
@@ -61,8 +137,8 @@ function App() {
                   </p>
 
                   <div className="hero-buttons">
-                    <a href="#contacto" className="btn-primary">Buscar Ayuda Inmediata</a>
-                    <a href="#servicios" className="btn-secondary">Conocer Recursos</a>
+                    <a href="#contacto" className="btn-primary">Buscar Asesoria</a>
+                    <a href="#servicios" className="btn-secondary">Conocer Servicios y Recursos</a>
                   </div>
 
                   <div className="hero-pills" aria-label="Indicadores de seguridad">
@@ -299,25 +375,42 @@ function App() {
     <div className="nebula-app">
       <header className="header">
         <div className="container header-container">
-          <div className="logo">
+          <a href="#inicio" className="logo" onClick={(e) => { e.preventDefault(); navigateHome() }} aria-label="Ir a la página principal">
             <span className="logo-icon">✨</span>
             <span className="logo-text">NEBULA</span>
-          </div>
+          </a>
 
           <nav className="nav" aria-label="Navegación principal">
-            <a href="#" className="nav-link" onClick={(e) => { e.preventDefault(); setActivePage('home') }}>Inicio</a>
-            <a href="#" className="nav-link" onClick={(e) => { e.preventDefault(); setActivePage('home') }}>Pilares</a>
-            <a href="#" className="nav-link" onClick={(e) => { e.preventDefault(); setActivePage('home') }}>Sobre Nebula</a>
-            <a href="#" className="nav-link" onClick={(e) => { e.preventDefault(); setActivePage('home') }}>Servicios</a>
-            <a href="#" className="nav-link" onClick={(e) => { e.preventDefault(); setActivePage('home') }}>Cómo Actuar</a>
-            <a href="#" className="nav-link" onClick={(e) => { e.preventDefault(); setActivePage('centros') }}>Ayuda</a>
-            <a href="#" className="nav-link" onClick={(e) => { e.preventDefault(); setActivePage('centros') }}>Nuestros Socios</a>
-            <a href="#" className="nav-link" onClick={(e) => { e.preventDefault(); setActivePage('modulos') }}>Admin</a>
+            <a href="#inicio" className="nav-link" onClick={(e) => { e.preventDefault(); navigateToSection('inicio') }}>Inicio</a>
+            <a href="#pilares" className="nav-link" onClick={(e) => { e.preventDefault(); navigateToSection('pilares') }}>Pilares</a>
+            <a href="#nosotros" className="nav-link" onClick={(e) => { e.preventDefault(); navigateToSection('nosotros') }}>Sobre Nebula</a>
+            <a href="#servicios" className="nav-link" onClick={(e) => { e.preventDefault(); navigateToSection('servicios') }}>Servicios</a>
+            <a href="#proceso" className="nav-link" onClick={(e) => { e.preventDefault(); navigateToSection('proceso') }}>Cómo Actuar</a>
+            <a href="#ayuda" className="nav-link" onClick={(e) => { e.preventDefault(); setActivePage('ayuda'); window.history.pushState(null, '', '#ayuda') }}>Ayuda</a>
+            <a href="#socios" className="nav-link" onClick={(e) => { e.preventDefault(); setActivePage('socios'); window.history.pushState(null, '', '#socios') }}>Nuestros Socios</a>
+            <a href="#login-admin" className="nav-link" onClick={(e) => { e.preventDefault(); setActivePage('login-admin'); window.history.pushState(null, '', '#login-admin') }}>Admin</a>
           </nav>
 
-          <div className="header-emergency">
-            <a href="tel:911" className="emergency-btn">🚨 Emergencias: 911</a>
+
+
+
+          <div className="header-ai">
+            <button
+              type="button"
+              className="ai-evaluation-button"
+              onClick={() => setActivePage('ia')}
+              aria-label="Abrir evaluación de IA"
+            >
+              <img
+                src={isAiBlinking ? miImagenParpadeo : miImagen}
+                alt="Evaluación de IA"
+              />
+            </button>
           </div>
+
+
+
+
         </div>
       </header>
 
@@ -332,10 +425,10 @@ function App() {
           <div className="footer-col">
             <h4>Secciones</h4>
             <ul>
-              <li><a href="#" onClick={(e) => { e.preventDefault(); setActivePage('home') }}>Inicio</a></li>
-              <li><a href="#" onClick={(e) => { e.preventDefault(); setActivePage('home') }}>Pilares</a></li>
-              <li><a href="#" onClick={(e) => { e.preventDefault(); setActivePage('home') }}>Sobre el Proyecto</a></li>
-              <li><a href="#" onClick={(e) => { e.preventDefault(); setActivePage('home') }}>Servicios</a></li>
+              <li><a href="#inicio" onClick={(e) => { e.preventDefault(); navigateToSection('inicio') }}>Inicio</a></li>
+              <li><a href="#pilares" onClick={(e) => { e.preventDefault(); navigateToSection('pilares') }}>Pilares</a></li>
+              <li><a href="#nosotros" onClick={(e) => { e.preventDefault(); navigateToSection('nosotros') }}>Sobre el Proyecto</a></li>
+              <li><a href="#servicios" onClick={(e) => { e.preventDefault(); navigateToSection('servicios') }}>Servicios</a></li>
             </ul>
           </div>
           <div className="footer-col">
@@ -361,8 +454,7 @@ function App() {
 
       <a
         className="panic-button"
-        href="#"
-        onClick={(e) => e.preventDefault()}
+        href="https://www.shein.com.mx/?onelink=10/4ivi7j3cevpg&requestId=olw-61pykflxywwa&url_from=affiliate_af_b_68_181_0&affiliateID=af_b_sub_13861&click_id=gx-mx-shein-shein-ssd&sub_id=browser&campaign_id=SPDL&source_id=opera&placement_id=SPDL&network=%7Bnetwork%7D&keyword=%7Bkeyword%7D&cdn_rsite=ak&ref=www&rep=dir&ret=mx"
         aria-label="Botón de pánico"
       >
         <span className="panic-icon">🚨</span>

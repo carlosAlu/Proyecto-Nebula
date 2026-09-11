@@ -1,4 +1,5 @@
-﻿const modulos = [
+﻿// Contenido de módulos preventivos para reconocer riesgos y buscar apoyo con seguridad.
+const modulos = [
   {
     title: 'Prevención y reconocimiento',
     description: 'Identifica señales de riesgo y toma decisiones con información clara.',
@@ -16,6 +17,7 @@
   },
 ]
 
+// Vista con recursos educativos y preventivos para actuar de manera consciente y segura.
 function ModulosPreventivos() {
   return (
     <div className="page-shell">

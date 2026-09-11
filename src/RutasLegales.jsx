@@ -1,4 +1,5 @@
-﻿const rutas = [
+﻿// Pasos clave para orientar legalmente a la persona y facilitar una respuesta segura.
+const rutas = [
   {
     title: 'Identifica la situación',
     description: 'Observa señales, toma nota y prioriza tu seguridad.',
@@ -16,6 +17,7 @@
   },
 ]
 
+// Explica, de manera resumida, los pasos legales y de cuidado que pueden seguirse.
 function RutasLegales() {
   return (
     <div className="page-shell">
