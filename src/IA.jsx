@@ -22,7 +22,7 @@ function IA() {
 							<span>Disponibilidad de orientación</span>
 						</div>
 						<div className="ai-stat-card">
-							<strong>3.8/5</strong>
+							<strong>4.7/5</strong>
 							<span>Satisfacción en atención inicial</span>
 						</div>
 					</div>
