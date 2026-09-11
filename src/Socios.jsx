@@ -29,6 +29,7 @@ function Socios() {
 							<div className="card-icon">🤝</div>
 							<h3>{partner.name}</h3>
 							<p>{partner.type}</p>
+							<span>Colaboración activa</span>
 						</article>
 					))}
 				</div>

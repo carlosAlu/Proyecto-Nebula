@@ -23,7 +23,7 @@ function Admin() {
 							<div className="card-icon">{option.icon}</div>
 							<h3>{option.title}</h3>
 							<p>{option.description}</p>
-							<button type="button" className="btn-secondary">Abrir módulo</button>
+							<button type="button" className="card-cta">Abrir módulo</button>
 						</article>
 					))}
 				</div>
