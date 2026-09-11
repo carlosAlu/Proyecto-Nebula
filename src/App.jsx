@@ -12,6 +12,7 @@ import Socios from './Socios.jsx'
 import IA from './IA.jsx'
 import miImagen from './assets/Circ_AI.png'
 import miImagenParpadeo from './assets/Circ_Ai_Parpadeo.png'
+import logo from './assets/Logo.png'
 
 // Acciones rápidas que aparecen en la home y llevan a cada sección principal de la app.
 const quickActions = [
@@ -376,7 +377,9 @@ function App() {
       <header className="header">
         <div className="container header-container">
           <a href="#inicio" className="logo" onClick={(e) => { e.preventDefault(); navigateHome() }} aria-label="Ir a la página principal">
-            <span className="logo-icon">✨</span>
+            <span className="logo-icon">
+              <img src={logo} alt="Logo Nebula" />
+            </span>
             <span className="logo-text">NEBULA</span>
           </a>
 
@@ -419,7 +422,10 @@ function App() {
       <footer className="footer">
         <div className="container footer-grid">
           <div className="footer-col">
-            <h3>✨ NEBULA</h3>
+            <h3>
+              <img src={logo} alt="Logo Nebula" className="footer-logo-icon" />
+              <span>NEBULA</span>
+            </h3>
             <p>Sistema de prevención, concientización y apoyo contra la violencia hacia la mujer.</p>
           </div>
           <div className="footer-col">
