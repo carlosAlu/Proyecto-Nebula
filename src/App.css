@@ -79,11 +79,42 @@ textarea {
 }
 
 .header-ai {
+  display: flex;
+  align-items: center;
   position: absolute;
-  top: 50%;
+  top: calc(50% + 50px);
   right: min(22px, calc(622px - 50vw));
   z-index: 1;
-  transform: translateY(-30%);
+  transform: translateY(-15%);
+}
+
+.ai-message {
+  position: absolute;
+  right: calc(100% + 12px);
+  width: 220px;
+  margin: 0;
+  padding: 10px 13px;
+  border: 1px solid #e8d8f5;
+  border-radius: 14px;
+  background: #fff;
+  color: var(--primary-color);
+  font-size: 0.78rem;
+  line-height: 1.35;
+  box-shadow: 0 8px 22px rgba(75, 29, 114, 0.14);
+  animation: ai-message-in 0.45s ease both;
+}
+
+.ai-message::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  right: -7px;
+  width: 12px;
+  height: 12px;
+  border-top: 1px solid #e8d8f5;
+  border-right: 1px solid #e8d8f5;
+  background: #fff;
+  transform: translateY(-50%) rotate(45deg);
 }
 
 .logo {
@@ -171,8 +202,23 @@ textarea {
   }
 }
 
+@keyframes ai-message-in {
+  from {
+    opacity: 0;
+    transform: translateX(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .ai-evaluation-button {
+    animation: none;
+  }
+
+  .ai-message {
     animation: none;
   }
 }
@@ -950,6 +996,12 @@ h2 {
 }
 
 @media (max-width: 520px) {
+  .ai-message {
+    right: 72px;
+    width: 185px;
+    font-size: 0.74rem;
+  }
+
   .btn-primary,
   .btn-secondary {
     width: 100%;

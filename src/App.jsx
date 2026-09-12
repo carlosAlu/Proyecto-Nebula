@@ -7,7 +7,6 @@ import RutasLegales from './RutasLegales.jsx'
 import Admin from './Admin.jsx'
 import LoginAdmin from './LoginAdmin.jsx'
 import SingUpAdmin from './SingUpAdmin.jsx'
-import Ayuda from './Ayuda.jsx'
 import Socios from './Socios.jsx'
 import IA from './IA.jsx'
 import miImagen from './assets/Circ_AI.png'
@@ -42,12 +41,20 @@ const quickActions = [
   },
 ]
 
+const aiMessages = [
+  '¿Tienes dudas? Haz clic y recibe orientación clara para dar el siguiente paso.',
+  'Explora esta herramienta: encontrarás información útil para sentirte más segura.',
+  'Puedes comenzar con calma. Haz clic para conocer tus opciones de apoyo.',
+  'Estoy aquí para orientarte. Entra y descubre recursos que pueden ayudarte.',
+]
+
 // Componente principal de Nebula. Gestiona la navegación entre secciones,
 // la vista de inicio y la renderización de pantallas internas.
 function App() {
   const [activePage, setActivePage] = useState('home')
   const [pendingSection, setPendingSection] = useState(null)
   const [isAiBlinking, setIsAiBlinking] = useState(false)
+  const [aiMessageIndex, setAiMessageIndex] = useState(0)
 
   // Efecto para simular el parpadeo de la imagen de IA en el header.
   useEffect(() => {
@@ -70,6 +77,15 @@ function App() {
       window.clearTimeout(blinkTimer)
       window.clearTimeout(openEyesTimer)
     }
+  }, [])
+
+  // Cambia ocasionalmente el consejo que acompaña al botón de IA.
+  useEffect(() => {
+    const messageTimer = window.setInterval(() => {
+      setAiMessageIndex((currentIndex) => (currentIndex + 1) % aiMessages.length)
+    }, 8000)
+
+    return () => window.clearInterval(messageTimer)
   }, [])
 
   // Cuando se selecciona una sección desde la home, se desplaza a esa parte de la página.
@@ -389,7 +405,6 @@ function App() {
             <a href="#nosotros" className="nav-link" onClick={(e) => { e.preventDefault(); navigateToSection('nosotros') }}>Sobre Nebula</a>
             <a href="#servicios" className="nav-link" onClick={(e) => { e.preventDefault(); navigateToSection('servicios') }}>Servicios</a>
             <a href="#proceso" className="nav-link" onClick={(e) => { e.preventDefault(); navigateToSection('proceso') }}>Cómo Actuar</a>
-            <a href="#ayuda" className="nav-link" onClick={(e) => { e.preventDefault(); setActivePage('ayuda'); window.history.pushState(null, '', '#ayuda') }}>Ayuda</a>
             <a href="#socios" className="nav-link" onClick={(e) => { e.preventDefault(); setActivePage('socios'); window.history.pushState(null, '', '#socios') }}>Nuestros Socios</a>
             <a href="#login-admin" className="nav-link" onClick={(e) => { e.preventDefault(); setActivePage('login-admin'); window.history.pushState(null, '', '#login-admin') }}>Admin</a>
           </nav>
@@ -398,6 +413,9 @@ function App() {
 
 
           <div className="header-ai">
+            <p className="ai-message" aria-live="polite" key={aiMessageIndex}>
+              {aiMessages[aiMessageIndex]}
+            </p>
             <button
               type="button"
               className="ai-evaluation-button"
