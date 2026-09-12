@@ -55,6 +55,7 @@ function App() {
   const [pendingSection, setPendingSection] = useState(null)
   const [isAiBlinking, setIsAiBlinking] = useState(false)
   const [aiMessageIndex, setAiMessageIndex] = useState(0)
+  const [isAiMessageVisible, setIsAiMessageVisible] = useState(true)
 
   // Efecto para simular el parpadeo de la imagen de IA en el header.
   useEffect(() => {
@@ -79,14 +80,37 @@ function App() {
     }
   }, [])
 
-  // Cambia ocasionalmente el consejo que acompaña al botón de IA.
+  // Alterna el consejo entre periodos visibles y pausas sin mensaje.
   useEffect(() => {
-    const messageTimer = window.setInterval(() => {
-      setAiMessageIndex((currentIndex) => (currentIndex + 1) % aiMessages.length)
-    }, 8000)
+    let messageTimer
 
-    return () => window.clearInterval(messageTimer)
-  }, [])
+    const scheduleMessage = () => {
+      const delay = isAiMessageVisible
+        ? 4000 + Math.random() * 5000
+        : 4000 + Math.random() * 5000
+
+      messageTimer = window.setTimeout(() => {
+        if (isAiMessageVisible) {
+          setIsAiMessageVisible(false)
+        } else {
+          setAiMessageIndex((currentIndex) => {
+            let nextIndex = Math.floor(Math.random() * aiMessages.length)
+
+            while (aiMessages.length > 1 && nextIndex === currentIndex) {
+              nextIndex = Math.floor(Math.random() * aiMessages.length)
+            }
+
+            return nextIndex
+          })
+          setIsAiMessageVisible(true)
+        }
+      }, delay)
+    }
+
+    scheduleMessage()
+
+    return () => window.clearTimeout(messageTimer)
+  }, [isAiMessageVisible])
 
   // Cuando se selecciona una sección desde la home, se desplaza a esa parte de la página.
   useEffect(() => {
@@ -412,22 +436,26 @@ function App() {
 
 
 
-          <div className="header-ai">
-            <p className="ai-message" aria-live="polite" key={aiMessageIndex}>
-              {aiMessages[aiMessageIndex]}
-            </p>
-            <button
-              type="button"
-              className="ai-evaluation-button"
-              onClick={() => setActivePage('ia')}
-              aria-label="Abrir evaluación de IA"
-            >
-              <img
-                src={isAiBlinking ? miImagenParpadeo : miImagen}
-                alt="Evaluación de IA"
-              />
-            </button>
-          </div>
+          {activePage !== 'admin' && activePage !== 'login-admin' && activePage !== 'ia' && (
+            <div className="header-ai">
+              {isAiMessageVisible && (
+                <p className="ai-message" aria-live="polite" key={aiMessageIndex}>
+                  {aiMessages[aiMessageIndex]}
+                </p>
+              )}
+              <button
+                type="button"
+                className="ai-evaluation-button"
+                onClick={() => setActivePage('ia')}
+                aria-label="Abrir evaluación de IA"
+              >
+                <img
+                  src={isAiBlinking ? miImagenParpadeo : miImagen}
+                  alt="Evaluación de IA"
+                />
+              </button>
+            </div>
+          )}
 
 
 
