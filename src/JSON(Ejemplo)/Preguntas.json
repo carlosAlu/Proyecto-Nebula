@@ -1,0 +1,27 @@
+{
+  "_id": "60d5ec49f1b2c8a123456789",
+  "texto": "¿Tu pareja o alguna persona cercana te ha insultado o humillado?",
+  "categoria": "Violencia psicológica",
+  "orden": 1,
+  "estado": "activo",
+  "version": "v1.0",
+  "opcionesRespuesta": [
+    {
+      "texto": "Nunca",
+      "valor": 0,
+      "tags": ["seguro"]
+    },
+    {
+      "texto": "A veces",
+      "valor": 2,
+      "tags": ["alerta"]
+    },
+    {
+      "texto": "Frecuentemente",
+      "valor": 4,
+      "tags": ["peligro"]
+    }
+  ],
+  "createdAt": "2026-09-18T10:00:00Z",
+  "updatedAt": "2026-09-18T10:00:00Z"
+}

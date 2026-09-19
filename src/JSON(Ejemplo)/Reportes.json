@@ -1,0 +1,14 @@
+{
+  "_id": "60d5ec49f1b2c8a112233445",
+  "folioHash": "a8f5f167f44f4964e6c998dee827110c",
+  "institucionId": "60d5ec49f1b2c8a987654321",
+  "tipo": "Violencia psicológica",
+  "lugar": "Centro de trabajo",
+  "fechaPeriodo": "Últimos 3 meses",
+  "relacion": "Compañero de trabajo",
+  "descripcion": "He recibido comentarios humillantes constantes frente a otros compañeros, lo cual me hace sentir insegura.",
+  "urgencia": "Media",
+  "estado": "RECIBIDO",
+  "createdAt": "2026-09-18T17:04:08Z",
+  "updatedAt": "2026-09-18T17:04:08Z"
+}

@@ -1,0 +1,15 @@
+{
+  "_id": "60d5ec49f1b2c8a987654321",
+  "nombre": "Instituto Sudcaliforniano de las Mujeres",
+  "tipo": "Gubernamental",
+  "servicios": [
+    "Orientación psicológica", 
+    "Asesoría legal"
+  ],
+  "direccion": "Antonio Rosales, Centro, La Paz, B.C.S.",
+  "telefono": "6121234567",
+  "horario": "Lunes a Viernes de 8:00 a 15:00",
+  "sitioWeb": "http://ismujeres.bcs.gob.mx",
+  "descripcion": "Atención integral y preventiva para mujeres en situación de violencia.",
+  "estado": "activo"
+}
