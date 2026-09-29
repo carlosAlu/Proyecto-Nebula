@@ -32,6 +32,7 @@ function SingUpAdmin({ onBack, onLogin }) {
 						<p>Registra tus datos para solicitar acceso al panel administrativo.</p>
 					</div>
 
+					{/* Evita el envío y la recarga del navegador; el registro aún no está conectado a un servicio. */}
 					<form className="admin-login-form" onSubmit={(event) => event.preventDefault()}>
 						<label htmlFor="admin-signup-name">Nombre completo</label>
 						<input

@@ -34,6 +34,7 @@ function ModulosPreventivos() {
       <section className="page-section">
         <div className="container">
           <div className="info-grid">
+            {/* Construye las tarjetas informativas a partir del arreglo de módulos. */}
             {modulos.map((modulo) => (
               <article key={modulo.title} className="info-card">
                 <div className="card-icon">{modulo.icon}</div>

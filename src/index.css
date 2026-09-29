@@ -1,4 +1,5 @@
 :root {
+  /* Valores globales de tipografía y renderizado; App.css define componentes y paleta final. */
   font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
@@ -11,6 +12,7 @@
 }
 
 * {
+  /* Incluye padding y borde dentro de las dimensiones declaradas de cada elemento. */
   box-sizing: border-box;
 }
 
@@ -19,12 +21,14 @@ html {
 }
 
 body {
+  /* Reinicia márgenes y ocupa al menos toda la altura de la ventana. */
   margin: 0;
   min-width: 320px;
   min-height: 100vh;
 }
 
 #root {
+  /* Permite que React use todo el ancho y alto disponibles. */
   width: 100%;
   min-height: 100vh;
 }

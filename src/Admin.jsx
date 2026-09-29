@@ -18,6 +18,7 @@ function Admin() {
 			</section>
 			<section className="page-section">
 				<div className="container info-grid">
+					{/* Genera una tarjeta por cada módulo administrativo disponible. */}
 					{adminOptions.map((option) => (
 						<article key={option.title} className="info-card">
 							<div className="card-icon">{option.icon}</div>

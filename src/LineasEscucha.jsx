@@ -37,6 +37,7 @@ function LineaEscucha() {
       <section className="page-section">
         <div className="container">
           <div className="info-grid">
+            {/* Renderiza una tarjeta por cada canal de ayuda definido en info. */}
             {info.map((item) => (
               <article key={item.title} className="info-card">
                 <div className="card-icon">{item.icon}</div>

@@ -34,6 +34,7 @@ function RutasLegales() {
       <section className="page-section">
         <div className="container">
           <div className="info-grid">
+            {/* Presenta cada paso de la ruta como una tarjeta independiente. */}
             {rutas.map((ruta) => (
               <article key={ruta.title} className="info-card">
                 <div className="card-icon">{ruta.icon}</div>

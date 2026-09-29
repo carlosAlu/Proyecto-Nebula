@@ -9,9 +9,9 @@ import LoginAdmin from './LoginAdmin.jsx'
 import SingUpAdmin from './SingUpAdmin.jsx'
 import Socios from './Socios.jsx'
 import IA from './IA.jsx'
-import miImagen from './assets/Circ_AI.png'
-import miImagenParpadeo from './assets/Circ_Ai_Parpadeo.png'
 import logo from './assets/Logo.png'
+import violentometroImage from './assets/ViolentometroDemostrativo.png'
+
 
 // Acciones rápidas que aparecen en la home y llevan a cada sección principal de la app.
 const quickActions = [
@@ -41,76 +41,12 @@ const quickActions = [
   },
 ]
 
-const aiMessages = [
-  '¿Tienes dudas? Haz clic y recibe orientación clara para dar el siguiente paso.',
-  'Explora esta herramienta: encontrarás información útil para sentirte más segura.',
-  'Puedes comenzar con calma. Haz clic para conocer tus opciones de apoyo.',
-  'Estoy aquí para orientarte. Entra y descubre recursos que pueden ayudarte.',
-]
 
 // Componente principal de Nebula. Gestiona la navegación entre secciones,
 // la vista de inicio y la renderización de pantallas internas.
 function App() {
   const [activePage, setActivePage] = useState('home')
   const [pendingSection, setPendingSection] = useState(null)
-  const [isAiBlinking, setIsAiBlinking] = useState(false)
-  const [aiMessageIndex, setAiMessageIndex] = useState(0)
-  const [isAiMessageVisible, setIsAiMessageVisible] = useState(true)
-
-  // Efecto para simular el parpadeo de la imagen de IA en el header.
-  useEffect(() => {
-    let blinkTimer
-    let openEyesTimer
-
-    const scheduleBlink = () => {
-      blinkTimer = window.setTimeout(() => {
-        setIsAiBlinking(true)
-        openEyesTimer = window.setTimeout(() => {
-          setIsAiBlinking(false)
-          scheduleBlink()
-        }, 140)
-      }, 2800 + Math.random() * 4200)
-    }
-
-    scheduleBlink()
-
-    return () => {
-      window.clearTimeout(blinkTimer)
-      window.clearTimeout(openEyesTimer)
-    }
-  }, [])
-
-  // Alterna el consejo entre periodos visibles y pausas sin mensaje.
-  useEffect(() => {
-    let messageTimer
-
-    const scheduleMessage = () => {
-      const delay = isAiMessageVisible
-        ? 4000 + Math.random() * 5000
-        : 4000 + Math.random() * 5000
-
-      messageTimer = window.setTimeout(() => {
-        if (isAiMessageVisible) {
-          setIsAiMessageVisible(false)
-        } else {
-          setAiMessageIndex((currentIndex) => {
-            let nextIndex = Math.floor(Math.random() * aiMessages.length)
-
-            while (aiMessages.length > 1 && nextIndex === currentIndex) {
-              nextIndex = Math.floor(Math.random() * aiMessages.length)
-            }
-
-            return nextIndex
-          })
-          setIsAiMessageVisible(true)
-        }
-      }, delay)
-    }
-
-    scheduleMessage()
-
-    return () => window.clearTimeout(messageTimer)
-  }, [isAiMessageVisible])
 
   // Cuando se selecciona una sección desde la home, se desplaza a esa parte de la página.
   useEffect(() => {
@@ -133,6 +69,7 @@ function App() {
     setActivePage('home')
   }
 
+  // Limpia la sección pendiente, vuelve a la portada y desplaza la ventana arriba.
   const navigateHome = () => {
     setPendingSection(null)
     setActivePage('home')
@@ -152,6 +89,7 @@ function App() {
         return <RutasLegales />
       case 'admin':
         return <Admin />
+      // Estas funciones flecha cambian entre las vistas de acceso y registro.
       case 'login-admin':
         return <LoginAdmin onBack={navigateHome} onSignup={() => setActivePage('signup-admin')} />
       case 'signup-admin':
@@ -169,48 +107,47 @@ function App() {
             <section id="inicio" className="hero-section">
               <div className="container hero-content">
                 <div className="hero-copy">
-                  <span className="eyebrow">Prevención • apoyo • comunidad</span>
-                  <h1>NEBULA: Prevención y Red de Apoyo</h1>
+                  <span className="eyebrow">Un lugar para entender y orientarte</span>
+                  <h1>Tu bienestar <span>también importa.</span></h1>
                   <p>
-                    Un espacio seguro e informativo dedicado a la prevención de la violencia
-                    contra la mujer, la concientización comunitaria y el acceso directo a
-                    centros de ayuda especializada.
+                    Información, orientación y herramientas para reconocer señales de violencia
+                    y buscar apoyo. A tu ritmo, con privacidad y sin juicios.
                   </p>
 
                   <div className="hero-buttons">
-                    <a href="#contacto" className="btn-primary">Buscar Asesoria</a>
-                    <a href="#servicios" className="btn-secondary">Conocer Servicios y Recursos</a>
+                    <button type="button" className="btn-primary" onClick={() => setActivePage('ia')}>
+                      Realizar autoevaluación <span aria-hidden="true">→</span>
+                    </button>
+                    <button type="button" className="btn-secondary" onClick={() => navigateToSection('nosotros')}>
+                      Conocer NEBULA
+                    </button>
                   </div>
 
-                  <div className="hero-pills" aria-label="Indicadores de seguridad">
-                    <span>Confidencial</span>
-                    <span>Atención 24/7</span>
-                    <span>Guías verificadas</span>
+                  <div className="hero-privacy-note">
+                    <span aria-hidden="true">♧</span>
+                    <span>No necesitas crear una cuenta para comenzar.</span>
                   </div>
                 </div>
 
                 <div className="hero-visual" aria-label="Panel informativo de Nebula">
-                  <div className="security-card main-card">
-                    <div className="card-top">
-                      <span className="live-dot" />
-                      <span>Canal seguro</span>
+                  <div className="assessment-preview-card">
+                    <div className="assessment-preview-header">
+                      <div>
+                        <span className="assessment-eyebrow">Un momento para ti</span>
+                        <h2>¿Cómo te has sentido?</h2>
+                      </div>
+                      <span className="assessment-heart" aria-hidden="true">♡</span>
                     </div>
-                    <h3>Apoyo inmediato</h3>
-                    <ul>
-                      <li>✅ Orientación inicial</li>
-                      <li>✅ Centros de ayuda</li>
-                      <li>✅ Guías legales</li>
-                    </ul>
-                  </div>
-
-                  <div className="mini-stat">
-                    <strong>92%</strong>
-                    <span>Canalización exitosa</span>
-                  </div>
-
-                  <div className="mini-stat accent">
-                    <strong>911</strong>
-                    <span>Línea de ayuda</span>
+                    <div className="assessment-progress-labels">
+                      <span>Tu espacio es privado</span>
+                      <span>Matriz oficial</span>
+                    </div>
+                    <div className="assessment-progress" aria-hidden="true"><span /></div>
+                    <p className="assessment-prompt">A veces, lo que vivimos puede ser difícil de nombrar.</p>
+                    <p className="assessment-disclaimer">Esta herramienta utiliza una matriz de riesgo oficial para orientarte. No es un diagnóstico.</p>
+                    <button type="button" className="assessment-start" onClick={() => setActivePage('ia')}>
+                      Comenzar con calma <span aria-hidden="true">→</span>
+                    </button>
                   </div>
                 </div>
               </div>
@@ -249,6 +186,16 @@ function App() {
                     <p>Campañas activas para transformar la cultura y prevenir la violencia desde la raíz.</p>
                   </div>
                 </div>
+              </div>
+            </section>
+
+            <section className="violentometro-section" aria-label="Violentómetro demostrativo">
+              <div className="container">
+                <img
+                  className="violentometro-image"
+                  src={violentometroImage}
+                  alt="Violentómetro: ejemplos de conductas de alerta, violencia y peligro, organizados por nivel de riesgo."
+                />
               </div>
             </section>
 
@@ -296,6 +243,7 @@ function App() {
                 <p className="section-subtitle">Herramientas diseñadas para ofrecer soporte integral y oportuno.</p>
 
                 <div className="quick-actions-grid">
+                  {/* Recorre las acciones configuradas y cambia a la pantalla asociada al hacer clic. */}
                   {quickActions.map((action) => (
                     <a
                       key={action.title}
@@ -373,10 +321,9 @@ function App() {
                 </div>
               </div>
             </section>
-
             <section id="contacto" className="cta-contact-section">
               <div className="container">
-                <h2>¿Necesitas Orientación o Quieres Unirte a Nebula?</h2>
+                <h2>¿Necesitas Orientación?</h2>
                 <p>
                   Escríbenos para recibir información sobre centros de ayuda, o para colaborar con nuestra
                   iniciativa comunitaria.
@@ -423,43 +370,17 @@ function App() {
             <span className="logo-text">NEBULA</span>
           </a>
 
+          {/* Los eventos cancelan el ancla predeterminada para usar la navegación interna de React. */}
           <nav className="nav" aria-label="Navegación principal">
-            <a href="#inicio" className="nav-link" onClick={(e) => { e.preventDefault(); navigateToSection('inicio') }}>Inicio</a>
-            <a href="#pilares" className="nav-link" onClick={(e) => { e.preventDefault(); navigateToSection('pilares') }}>Pilares</a>
-            <a href="#nosotros" className="nav-link" onClick={(e) => { e.preventDefault(); navigateToSection('nosotros') }}>Sobre Nebula</a>
-            <a href="#servicios" className="nav-link" onClick={(e) => { e.preventDefault(); navigateToSection('servicios') }}>Servicios</a>
-            <a href="#proceso" className="nav-link" onClick={(e) => { e.preventDefault(); navigateToSection('proceso') }}>Cómo Actuar</a>
-            <a href="#socios" className="nav-link" onClick={(e) => { e.preventDefault(); setActivePage('socios'); window.history.pushState(null, '', '#socios') }}>Nuestros Socios</a>
-            <a href="#login-admin" className="nav-link" onClick={(e) => { e.preventDefault(); setActivePage('login-admin'); window.history.pushState(null, '', '#login-admin') }}>Admin</a>
+            <a href="#pilares" className="nav-link" onClick={(e) => { e.preventDefault(); navigateToSection('pilares') }}>Prevención</a>
+            <button type="button" className="nav-link" onClick={() => setActivePage('ia')}>Autoevaluación</button>
+            <a href="#servicios" className="nav-link" onClick={(e) => { e.preventDefault(); navigateToSection('servicios') }}>Recursos</a>
+            <a href="#socios" className="nav-link" onClick={(e) => { e.preventDefault(); setActivePage('socios'); window.history.pushState(null, '', '#socios') }}>Socios</a>
+            <a href="#login-admin" className="nav-link nav-admin-link" onClick={(e) => { e.preventDefault(); setActivePage('login-admin'); window.history.pushState(null, '', '#login-admin') }}>Admin</a>
           </nav>
-
-
-
-
-          {activePage !== 'admin' && activePage !== 'login-admin' && activePage !== 'ia' && (
-            <div className="header-ai">
-              {isAiMessageVisible && (
-                <p className="ai-message" aria-live="polite" key={aiMessageIndex}>
-                  {aiMessages[aiMessageIndex]}
-                </p>
-              )}
-              <button
-                type="button"
-                className="ai-evaluation-button"
-                onClick={() => setActivePage('ia')}
-                aria-label="Abrir evaluación de IA"
-              >
-                <img
-                  src={isAiBlinking ? miImagenParpadeo : miImagen}
-                  alt="Evaluación de IA"
-                />
-              </button>
-            </div>
-          )}
-
-
-
-
+          <button type="button" className="header-report-button" onClick={() => navigateToSection('contacto')}>
+            Reportar
+          </button>
         </div>
       </header>
 
@@ -476,6 +397,7 @@ function App() {
           </div>
           <div className="footer-col">
             <h4>Secciones</h4>
+            {/* Los enlaces del pie reutilizan la navegación a secciones de la portada. */}
             <ul>
               <li><a href="#inicio" onClick={(e) => { e.preventDefault(); navigateToSection('inicio') }}>Inicio</a></li>
               <li><a href="#pilares" onClick={(e) => { e.preventDefault(); navigateToSection('pilares') }}>Pilares</a></li>
@@ -485,6 +407,7 @@ function App() {
           </div>
           <div className="footer-col">
             <h4>Recursos Útiles</h4>
+            {/* Estos controladores abren directamente cada pantalla de recursos. */}
             <ul>
               <li><a href="#" onClick={(e) => { e.preventDefault(); setActivePage('centros') }}>Centros de Atención</a></li>
               <li><a href="#" onClick={(e) => { e.preventDefault(); setActivePage('rutas') }}>Rutas de Acción</a></li>

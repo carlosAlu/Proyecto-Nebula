@@ -33,6 +33,7 @@ function LoginAdmin({ onBack, onSignup }) {
 						<p>Ingresa tus datos para continuar al panel de gestión.</p>
 					</div>
 
+					{/* Evita el envío y la recarga del navegador; aquí aún no se conecta la autenticación. */}
 					<form className="admin-login-form" onSubmit={(event) => event.preventDefault()}>
 						<label htmlFor="admin-email">Correo electrónico</label>
 						<input
