@@ -33,7 +33,7 @@ function IA() {
 					initialMessages: ['¡Hola! Me llamo Kara. Estoy aquí para escucharte.'],
 					i18n: {
 						es: {
-							title: 'Asistente virtual',
+							title: 'Asistente virtual AI',
 							subtitle: 'Estoy aquí para ayudarte',
 							inputPlaceholder: 'Escribe tu pregunta...',
 							getStarted: 'Nueva conversación',
