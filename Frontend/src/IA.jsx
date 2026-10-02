@@ -30,7 +30,7 @@ function IA() {
 					target: '#nebula-ai-chat',
 					mode: 'fullscreen',
 					defaultLanguage: 'es',
-					initialMessages: ['¡Hola! Me llamo Nebula. Estoy aqui para escucharte y ayudarte a explorar tus opciones de apoyo.'],
+					initialMessages: ['¡Hola! Me llamo Kara. Estoy aquí para escucharte.'],
 					i18n: {
 						es: {
 							title: 'Asistente virtual',
