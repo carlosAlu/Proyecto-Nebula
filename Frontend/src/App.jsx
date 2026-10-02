@@ -93,10 +93,19 @@ function getRouteFromHash() {
 function App() {
   const [activePage, setActivePage] = useState(() => getRouteFromHash().page)
   const [activeSection, setActiveSection] = useState(() => getRouteFromHash().section)
+  const [isDarkMode, setIsDarkMode] = useState(
+    () => window.localStorage.getItem('nebula-theme') === 'dark',
+  )
   const [isAiBlinking, setIsAiBlinking] = useState(false)
   const [aiMessage, setAiMessage] = useState(null)
   const [isReportModalOpen, setIsReportModalOpen] = useState(false)
   const [isReportLookupOpen, setIsReportLookupOpen] = useState(false)
+
+  useEffect(() => {
+    const theme = isDarkMode ? 'dark' : 'light'
+    document.documentElement.dataset.theme = theme
+    window.localStorage.setItem('nebula-theme', theme)
+  }, [isDarkMode])
 
   // Mantiene la vista sincronizada con los botones atrás/adelante y los cambios del hash.
   useEffect(() => {
@@ -549,6 +558,16 @@ function App() {
             <a href="#socios" className="nav-link" onClick={(e) => { e.preventDefault(); navigateToPage('socios') }}>Socios</a>
             <button type="button" className="nav-link" onClick={() => navigateToPage('autoevaluacion')}>Autoevaluación</button>
             <a href="#login-admin" className="nav-link nav-admin-link" onClick={(e) => { e.preventDefault(); navigateToPage('login-admin') }}>Admin</a>
+            <button
+              type="button"
+              className="nav-link theme-toggle"
+              onClick={() => setIsDarkMode((currentMode) => !currentMode)}
+              aria-label={`Activar modo ${isDarkMode ? 'claro' : 'oscuro'}`}
+              aria-pressed={isDarkMode}
+              title={`Activar modo ${isDarkMode ? 'claro' : 'oscuro'}`}
+            >
+              <span aria-hidden="true">{isDarkMode ? '☀' : '☾'}</span>
+            </button>
           </nav>
           <button type="button" className="header-report-button" onClick={() => setIsReportModalOpen(true)}>
             Reportar

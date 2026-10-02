@@ -2596,3 +2596,226 @@ h2 {
     padding: 24px 18px;
   }
 }
+
+.theme-toggle {
+  display: inline-grid;
+  width: 32px;
+  height: 32px;
+  flex: 0 0 auto;
+  place-items: center;
+  border: 1px solid var(--border-color) !important;
+  border-radius: 50%;
+  background: transparent !important;
+  color: var(--text-muted) !important;
+  font-size: 1.1rem !important;
+  line-height: 1;
+  transition: color 0.2s ease, background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.theme-toggle:hover {
+  border-color: var(--primary-light) !important;
+  background: var(--primary-soft) !important;
+  color: var(--primary-color) !important;
+}
+
+.theme-toggle:focus-visible {
+  outline: 3px solid rgba(113, 141, 128, 0.45);
+  outline-offset: 3px;
+}
+
+:root[data-theme='dark'] {
+  color-scheme: dark;
+  background: #17151b;
+  color: #f1edf4;
+  --primary-color: #c5a5dc;
+  --primary-light: #b99bd0;
+  --primary-soft: #30263a;
+  --accent-color: #a9c4b4;
+  --accent-hover: #c0d7ca;
+  --bg-light: #211e26;
+  --bg-white: #292630;
+  --text-main: #f1edf4;
+  --text-muted: #bbb4c3;
+  --border-color: #403a47;
+  --shadow-soft: 0 18px 40px rgba(0, 0, 0, 0.28);
+  --shadow-card: 0 12px 28px rgba(0, 0, 0, 0.22);
+}
+
+:root[data-theme='dark'] body,
+:root[data-theme='dark'] .nebula-app,
+:root[data-theme='dark'] .page-shell,
+:root[data-theme='dark'] .page-section,
+:root[data-theme='dark'] .hero-section,
+:root[data-theme='dark'] .advantages-section,
+:root[data-theme='dark'] .quick-actions-section,
+:root[data-theme='dark'] .skills-section,
+:root[data-theme='dark'] .services-section,
+:root[data-theme='dark'] .about-section,
+:root[data-theme='dark'] .process-section,
+:root[data-theme='dark'] .map-section,
+:root[data-theme='dark'] .ai-page-shell,
+:root[data-theme='dark'] .cta-contact-section,
+:root[data-theme='dark'] .contacts-info-section,
+:root[data-theme='dark'] .page-header,
+:root[data-theme='dark'] .admin-login-page,
+:root[data-theme='dark'] .admin-login-form-section,
+:root[data-theme='dark'] .report-lookup-section {
+  background-color: #211e26;
+  color: var(--text-main);
+}
+
+:root[data-theme='dark'] .header {
+  background: rgba(33, 30, 38, 0.96);
+  border-bottom-color: var(--border-color);
+}
+
+:root[data-theme='dark'] .hero-section::before {
+  opacity: 0.12;
+}
+
+:root[data-theme='dark'] .violentometro-section {
+  background: #211e26;
+}
+
+:root[data-theme='dark'] .violentometro-image {
+  filter: invert(0.88) hue-rotate(180deg) brightness(1.25);
+}
+
+:root[data-theme='dark'] .assessment-preview-card,
+:root[data-theme='dark'] .advantage-card,
+:root[data-theme='dark'] .service-card,
+:root[data-theme='dark'] .quick-action-card,
+:root[data-theme='dark'] .step-item,
+:root[data-theme='dark'] .about-stats-graphic,
+:root[data-theme='dark'] .info-card,
+:root[data-theme='dark'] .partner-card,
+:root[data-theme='dark'] .map-wrapper,
+:root[data-theme='dark'] .ai-stat-card,
+:root[data-theme='dark'] .ai-focus-card,
+:root[data-theme='dark'] .report-lookup-card,
+:root[data-theme='dark'] .report-create-card,
+:root[data-theme='dark'] .admin-login-mark,
+:root[data-theme='dark'] .admin-login-visual .eyebrow {
+  border-color: var(--border-color);
+  background: #292630;
+  color: var(--text-main);
+  box-shadow: var(--shadow-card);
+}
+
+:root[data-theme='dark'] .assessment-preview-header,
+:root[data-theme='dark'] .card-icon,
+:root[data-theme='dark'] .quick-action-media,
+:root[data-theme='dark'] .ai-focus-list li,
+:root[data-theme='dark'] .lookup-modal-icon,
+:root[data-theme='dark'] .report-modal-icon,
+:root[data-theme='dark'] .report-modal-close,
+:root[data-theme='dark'] .report-reference,
+:root[data-theme='dark'] .admin-login-visual,
+:root[data-theme='dark'] .admin-login-status {
+  border-color: var(--border-color);
+  background: #332e3a;
+  color: var(--text-main);
+}
+
+:root[data-theme='dark'] .page-header h1,
+:root[data-theme='dark'] .hero-copy h1,
+:root[data-theme='dark'] .assessment-preview-header h2,
+:root[data-theme='dark'] .about-text h2,
+:root[data-theme='dark'] .admin-login-visual h1,
+:root[data-theme='dark'] .footer-col h3,
+:root[data-theme='dark'] .footer-col h4,
+:root[data-theme='dark'] .footer-col ul li a,
+:root[data-theme='dark'] .cta-contact-section h2,
+:root[data-theme='dark'] .cta-contact-section p {
+  color: var(--text-main);
+}
+
+:root[data-theme='dark'] .hero-copy p,
+:root[data-theme='dark'] .section-subtitle,
+:root[data-theme='dark'] .about-text p,
+:root[data-theme='dark'] .assessment-prompt,
+:root[data-theme='dark'] .assessment-disclaimer,
+:root[data-theme='dark'] .advantage-card p,
+:root[data-theme='dark'] .service-card p,
+:root[data-theme='dark'] .step-item p,
+:root[data-theme='dark'] .partner-card p,
+:root[data-theme='dark'] .partner-card span,
+:root[data-theme='dark'] .admin-login-visual p,
+:root[data-theme='dark'] .report-form label {
+  color: var(--text-muted);
+}
+
+:root[data-theme='dark'] .page-header .eyebrow {
+  border-color: var(--border-color);
+  background: #332e3a;
+}
+
+:root[data-theme='dark'] .progress-bar,
+:root[data-theme='dark'] .circle-progress::before {
+  background: #403a47;
+}
+
+:root[data-theme='dark'] .contact-form input,
+:root[data-theme='dark'] .contact-form textarea,
+:root[data-theme='dark'] .admin-login-form input[type='text'],
+:root[data-theme='dark'] .admin-login-form input[type='email'],
+:root[data-theme='dark'] .admin-login-form input[type='password'],
+:root[data-theme='dark'] .report-form input[type='text'],
+:root[data-theme='dark'] .report-form select,
+:root[data-theme='dark'] .report-form textarea,
+:root[data-theme='dark'] .report-form input[type='file'] {
+  border-color: var(--border-color);
+  background: #211e26;
+  color: var(--text-main);
+}
+
+:root[data-theme='dark'] .contact-form input::placeholder,
+:root[data-theme='dark'] .contact-form textarea::placeholder,
+:root[data-theme='dark'] .report-form input::placeholder,
+:root[data-theme='dark'] .report-form textarea::placeholder {
+  color: #a69eae;
+}
+
+:root[data-theme='dark'] .report-modal {
+  border-color: var(--border-color);
+  background: #292630;
+}
+
+:root[data-theme='dark'] .report-confirmation-icon {
+  background: #304137;
+  color: #c0d7ca;
+}
+
+:root[data-theme='dark'] .success-message {
+  border-color: #3d5145;
+  background: #29382f;
+  color: #c0d7ca;
+}
+
+:root[data-theme='dark'] .footer {
+  background: #19171d;
+  color: var(--text-muted);
+}
+
+:root[data-theme='dark'] .footer-bottom {
+  border-color: var(--border-color);
+  color: var(--text-muted);
+}
+
+:root[data-theme='dark'] .footer-col ul li a:hover {
+  color: var(--primary-color);
+}
+
+:root[data-theme='dark'] .btn-secondary,
+:root[data-theme='dark'] .page-shell .btn-secondary,
+:root[data-theme='dark'] .info-card .btn-secondary,
+:root[data-theme='dark'] .card-cta {
+  border-color: var(--border-color);
+  background: #332e3a;
+  color: var(--text-main);
+}
+
+:root[data-theme='dark'] .admin-login-submit:hover,
+:root[data-theme='dark'] .btn-primary:hover {
+  background: #765b8a;
+}
