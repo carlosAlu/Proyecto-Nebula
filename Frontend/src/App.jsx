@@ -57,7 +57,6 @@ const pageRoutes = [
   'signup-admin',
   'socios',
   'ia',
-  'autoevaluacion',
 ]
 
 const homeSections = ['inicio', 'pilares', 'nosotros', 'servicios', 'proceso', 'contacto']
@@ -100,6 +99,7 @@ function App() {
   const [aiMessage, setAiMessage] = useState(null)
   const [isReportModalOpen, setIsReportModalOpen] = useState(false)
   const [isReportLookupOpen, setIsReportLookupOpen] = useState(false)
+  const [isAssessmentModalOpen, setIsAssessmentModalOpen] = useState(false)
 
   useEffect(() => {
     const theme = isDarkMode ? 'dark' : 'light'
@@ -217,6 +217,8 @@ function App() {
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }
 
+  const openAssessment = () => setIsAssessmentModalOpen(true)
+
   // Decide qué pantalla mostrar; el caso por defecto compone las secciones de la portada.
   const renderPage = () => {
     switch (activePage) {
@@ -239,8 +241,6 @@ function App() {
         return <Socios />
       case 'ia':
         return <IA />
-      case 'autoevaluacion':
-        return <Autoevaluacion />
       case 'home':
       default:
         return (
@@ -257,7 +257,7 @@ function App() {
                   </p>
 
                   <div className="hero-buttons">
-                    <button type="button" className="btn-primary" onClick={() => navigateToPage('autoevaluacion')}>
+                    <button type="button" className="btn-primary" onClick={openAssessment}>
                       Realizar autoevaluación <span aria-hidden="true">→</span>
                     </button>
                     <button type="button" className="btn-secondary" onClick={() => navigateToSection('nosotros')}>
@@ -287,7 +287,7 @@ function App() {
                     <div className="assessment-progress" aria-hidden="true"><span /></div>
                     <p className="assessment-prompt">A veces, lo que vivimos puede ser difícil de nombrar.</p>
                     <p className="assessment-disclaimer">Esta herramienta utiliza una matriz de riesgo oficial para orientarte. No es un diagnóstico.</p>
-                    <button type="button" className="assessment-start" onClick={() => navigateToPage('autoevaluacion')}>
+                    <button type="button" className="assessment-start" onClick={openAssessment}>
                       Comenzar con calma <span aria-hidden="true">→</span>
                     </button>
                   </div>
@@ -556,7 +556,7 @@ function App() {
             <a href="#pilares" className="nav-link" onClick={(e) => { e.preventDefault(); navigateToSection('pilares') }}>Pilares</a>
             <a href="#servicios" className="nav-link" onClick={(e) => { e.preventDefault(); navigateToSection('servicios') }}>Recursos</a>
             <a href="#socios" className="nav-link" onClick={(e) => { e.preventDefault(); navigateToPage('socios') }}>Socios</a>
-            <button type="button" className="nav-link" onClick={() => navigateToPage('autoevaluacion')}>Autoevaluación</button>
+            <button type="button" className="nav-link" onClick={openAssessment}>Autoevaluación</button>
             <a href="#login-admin" className="nav-link nav-admin-link" onClick={(e) => { e.preventDefault(); navigateToPage('login-admin') }}>Admin</a>
             <button
               type="button"
@@ -605,6 +605,15 @@ function App() {
       {/* Los modales se montan únicamente mientras su estado de apertura sea verdadero. */}
       {isReportModalOpen && <ReporteModal onClose={() => setIsReportModalOpen(false)} />}
       {isReportLookupOpen && <ConsultaReporteModal onClose={() => setIsReportLookupOpen(false)} />}
+      {isAssessmentModalOpen && (
+        <Autoevaluacion
+          onClose={() => setIsAssessmentModalOpen(false)}
+          onFindSupport={() => {
+            setIsAssessmentModalOpen(false)
+            navigateToPage('centros')
+          }}
+        />
+      )}
 
       {/* Enlaces a recursos frecuentes y datos de contacto y emergencia. */}
       <footer className="footer">
@@ -655,7 +664,7 @@ function App() {
         aria-label="Botón de pánico"
       >
         <span className="panic-icon">🚨</span>
-        <span className="panic-text">Pánico</span>
+        <span className="panic-text">SALIR</span>
       </a>
     </div>
   )

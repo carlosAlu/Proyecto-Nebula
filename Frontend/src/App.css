@@ -2618,6 +2618,312 @@ h2 {
   color: var(--primary-color) !important;
 }
 
+.assessment-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 3000;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  overflow-y: auto;
+  background: rgba(32, 35, 42, 0.58);
+  animation: report-backdrop-in 0.2s ease both;
+}
+
+.assessment-modal {
+  width: min(100%, 650px);
+  max-height: calc(100vh - 40px);
+  overflow-y: auto;
+  padding: 30px;
+  border: 1px solid rgba(255, 255, 255, 0.75);
+  border-radius: 28px;
+  background: #fbfbfa;
+  color: var(--text-main);
+  box-shadow: 0 28px 80px rgba(27, 22, 35, 0.28);
+  animation: report-modal-in 0.25s ease both;
+}
+
+.assessment-modal-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.assessment-stage {
+  display: inline-flex;
+  padding: 3px 11px;
+  border-radius: 999px;
+  background: #eee8f5;
+  color: var(--primary-color);
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.assessment-count {
+  margin-top: 7px;
+  color: var(--text-muted);
+  font-size: 0.86rem;
+}
+
+.assessment-close {
+  display: grid;
+  width: 34px;
+  height: 34px;
+  place-items: center;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 1.65rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.assessment-close:hover {
+  background: var(--primary-soft);
+  color: var(--primary-color);
+}
+
+.assessment-modal-progress {
+  height: 6px;
+  margin: 14px 0 26px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: #e9e5eb;
+}
+
+.assessment-modal-progress span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: var(--primary-color);
+  transition: width 0.25s ease;
+}
+
+.assessment-question {
+  max-width: 550px;
+  margin: 0 0 20px;
+  color: var(--text-main);
+  font-size: clamp(1.2rem, 3vw, 1.55rem);
+  line-height: 1.45;
+}
+
+.assessment-options {
+  display: grid;
+  gap: 10px;
+  border: 0;
+}
+
+.assessment-option {
+  display: flex;
+  min-height: 48px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 11px 15px;
+  border: 1px solid #e5e1e8;
+  border-radius: 15px;
+  background: transparent;
+  color: var(--text-main);
+  text-align: left;
+  cursor: pointer;
+  transition: border-color 0.18s ease, background-color 0.18s ease;
+}
+
+.assessment-option:hover {
+  border-color: #b9a5d1;
+}
+
+.assessment-option.is-selected {
+  border-color: #ded3eb;
+  background: #eee8f5;
+  color: var(--primary-color);
+}
+
+.assessment-modal-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  margin-top: 24px;
+}
+
+.assessment-exit,
+.assessment-continue {
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  padding: 10px 18px;
+  border: 0;
+  border-radius: 999px;
+  font-weight: 700;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.assessment-exit {
+  background: transparent;
+  color: var(--text-muted);
+}
+
+.assessment-exit:hover {
+  color: var(--primary-color);
+}
+
+.assessment-continue {
+  background: var(--primary-color);
+  color: #fff;
+}
+
+.assessment-continue:hover:not(:disabled) {
+  background: #3a1659;
+}
+
+.assessment-continue:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+.assessment-result-modal {
+  width: min(100%, 560px);
+}
+
+.assessment-result-content {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  text-align: center;
+}
+
+.assessment-result-icon {
+  display: grid;
+  width: 54px;
+  height: 54px;
+  place-items: center;
+  margin-bottom: 12px;
+  border-radius: 50%;
+  background: #eee8f5;
+  color: var(--primary-color);
+  font-size: 2rem;
+}
+
+.assessment-result-content h1 {
+  margin-bottom: 14px;
+  color: var(--text-main);
+  font-size: 1.55rem;
+}
+
+.assessment-result-panel {
+  width: 100%;
+  padding: 17px;
+  border: 1px solid #e5e1e8;
+  border-radius: 16px;
+  background: #f0edf4;
+  color: var(--text-main);
+}
+
+.assessment-result-panel strong {
+  color: var(--primary-color);
+  font-size: 0.85rem;
+}
+
+.assessment-result-panel p {
+  margin-top: 7px;
+  color: var(--text-muted);
+  font-size: 0.92rem;
+}
+
+.assessment-result-disclaimer {
+  margin: 14px 0 20px;
+  color: var(--text-muted);
+  font-size: 0.78rem;
+  font-style: italic;
+}
+
+.assessment-result-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+}
+
+.assessment-result-actions .assessment-exit,
+.assessment-result-actions .assessment-continue {
+  font-size: 0.82rem;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.assessment-option:focus-visible,
+.assessment-close:focus-visible,
+.assessment-exit:focus-visible,
+.assessment-continue:focus-visible {
+  outline: 3px solid rgba(124, 58, 237, 0.45);
+  outline-offset: 3px;
+}
+
+:root[data-theme='dark'] .assessment-modal {
+  border-color: var(--border-color);
+  background: #292630;
+  color: var(--text-main);
+}
+
+:root[data-theme='dark'] .assessment-option {
+  border-color: var(--border-color);
+  color: var(--text-main);
+}
+
+:root[data-theme='dark'] .assessment-option.is-selected,
+:root[data-theme='dark'] .assessment-stage,
+:root[data-theme='dark'] .assessment-result-icon {
+  background: #393044;
+  color: #d7c1ed;
+}
+
+:root[data-theme='dark'] .assessment-modal-progress {
+  background: #403a47;
+}
+
+:root[data-theme='dark'] .assessment-result-panel {
+  border-color: var(--border-color);
+  background: #332e3a;
+}
+
+:root[data-theme='dark'] .assessment-result-panel strong {
+  color: #d7c1ed;
+}
+
+@media (max-width: 520px) {
+  .assessment-modal-backdrop {
+    padding: 12px;
+  }
+
+  .assessment-modal {
+    max-height: calc(100vh - 24px);
+    padding: 24px 18px;
+    border-radius: 22px;
+  }
+
+  .assessment-result-actions {
+    align-items: stretch;
+    flex-direction: column;
+    width: 100%;
+  }
+}
+
 .theme-toggle:focus-visible {
   outline: 3px solid rgba(113, 141, 128, 0.45);
   outline-offset: 3px;
