@@ -61,6 +61,8 @@ const pageRoutes = [
 
 const homeSections = ['inicio', 'pilares', 'nosotros', 'servicios', 'proceso', 'contacto']
 
+const quickExitUrl = 'https://www.shein.com.mx/?onelink=10/4ivi7j3cevpg&requestId=olw-61pykflxywwa&url_from=affiliate_af_b_68_181_0&affiliateID=af_b_sub_13861&click_id=gx-mx-shein-shein-ssd&sub_id=browser&campaign_id=SPDL&source_id=opera&placement_id=SPDL&network=%7Bnetwork%7D&keyword=%7Bkeyword%7D&cdn_rsite=ak&ref=www&rep=dir&ret=mx'
+
 // Textos que se alternan en el globo junto al acceso flotante de IA.
 const aiMessages = [
   '¡Hola! hazme clic para platicar conmigo.',
@@ -572,7 +574,7 @@ function App() {
           <button type="button" className="header-report-button" onClick={() => setIsReportModalOpen(true)}>
             Reportar
           </button>
-          {!['admin', 'login-admin', 'signup-admin'].includes(activePage) && (
+          {!['admin', 'login-admin', 'signup-admin', 'ia'].includes(activePage) && (
             <div className="header-ai">
               {aiMessage && (
                 <button
@@ -660,7 +662,7 @@ function App() {
       {/* Acceso fijo de salida rápida configurado como botón de pánico. */}
       <a
         className="panic-button"
-        href="https://www.shein.com.mx/?onelink=10/4ivi7j3cevpg&requestId=olw-61pykflxywwa&url_from=affiliate_af_b_68_181_0&affiliateID=af_b_sub_13861&click_id=gx-mx-shein-shein-ssd&sub_id=browser&campaign_id=SPDL&source_id=opera&placement_id=SPDL&network=%7Bnetwork%7D&keyword=%7Bkeyword%7D&cdn_rsite=ak&ref=www&rep=dir&ret=mx"
+        href={quickExitUrl}
         aria-label="Botón de pánico"
       >
         <span className="panic-icon">🚨</span>
