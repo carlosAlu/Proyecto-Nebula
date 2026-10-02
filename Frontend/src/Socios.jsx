@@ -1,6 +1,6 @@
 import defaultImage from './assets/ImagenDefault.jpg'
 
-// Lista de socios e instituciones aliadas que apoyan la misión de Nebula.
+// Datos de las instituciones aliadas: nombre, tipo de colaboración, enlace e imagen.
 const partners = [
 	{
 		name: 'Centro Integral de Atención para la Mujer - Municipio de La Paz',
@@ -48,7 +48,7 @@ const partners = [
 
 ]
 
-// Pantalla que muestra la red de organizaciones y aliados de la iniciativa.
+// Presenta el encabezado de la red y genera tarjetas enlazadas para cada socio.
 function Socios() {
 	return (
 		<div id="socios" className="page-shell">

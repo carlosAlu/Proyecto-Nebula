@@ -1,5 +1,5 @@
 :root {
-  /* Valores globales de tipografía y renderizado; App.css define componentes y paleta final. */
+  /* Valores base de tipografía y renderizado usados por toda la aplicación. */
   font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
@@ -35,6 +35,7 @@ body {
 
 img,
 svg {
+  /* Evita que medios e iconos excedan el ancho disponible de su contenedor. */
   display: block;
   max-width: 100%;
 }
@@ -46,9 +47,11 @@ a {
 button,
 input,
 textarea {
+  /* Hace que los controles hereden la misma tipografía del resto de la interfaz. */
   font: inherit;
 }
 
+/* Elimina márgenes predeterminados para que el espaciado se controle desde los componentes. */
 h1,
 h2,
 h3,
@@ -56,4 +59,3 @@ h4,
 p {
   margin: 0;
 }
-

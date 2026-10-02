@@ -1,4 +1,4 @@
-﻿// Contenido de módulos preventivos para reconocer riesgos y buscar apoyo con seguridad.
+﻿// Datos de los módulos preventivos que se convierten en tarjetas dentro de esta pantalla.
 const modulos = [
   {
     title: 'Prevención y reconocimiento',
@@ -17,7 +17,7 @@ const modulos = [
   },
 ]
 
-// Vista con recursos educativos y preventivos para actuar de manera consciente y segura.
+// Organiza el encabezado de la página y la cuadrícula de recursos preventivos.
 function ModulosPreventivos() {
   return (
     <div className="page-shell">

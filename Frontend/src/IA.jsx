@@ -2,6 +2,7 @@
 function IA() {
 	return (
 		<div className="page-shell ai-page-shell">
+			{/* Explica el enfoque informativo y preventivo de esta pantalla. */}
 			<section className="page-header compact-hero">
 				<div className="container">
 					<span className="eyebrow">Evaluación IA</span>
@@ -10,6 +11,7 @@ function IA() {
 				</div>
 			</section>
 
+			{/* Muestra indicadores de referencia y los temas prioritarios de apoyo. */}
 			<section className="page-section">
 				<div className="container">
 					<div className="ai-panel">

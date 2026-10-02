@@ -1,11 +1,11 @@
-// Opciones del panel administrativo que muestran los módulos principales disponibles.
+// Datos de presentación de las tarjetas; aquí se definen título, descripción e icono de cada módulo.
 const adminOptions = [
 	{ title: 'Gestionar recursos', description: 'Administra guías, rutas de atención y materiales preventivos.', icon: '📚' },
 	{ title: 'Revisar solicitudes', description: 'Consulta y da seguimiento a las solicitudes de apoyo recibidas.', icon: '📝' },
 	{ title: 'Red de colaboradores', description: 'Mantén actualizada la información de organizaciones aliadas.', icon: '🤝' },
 ]
 
-// Pantalla del panel administrativo con acceso a las funciones principales del sistema.
+// Estructura del panel: encabezado de administración seguido por la cuadrícula de módulos.
 function Admin() {
 	return (
 		<div id="admin" className="page-shell">

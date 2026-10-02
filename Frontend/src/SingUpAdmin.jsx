@@ -2,6 +2,7 @@
 function SingUpAdmin({ onBack, onLogin }) {
 	return (
 		<div className="admin-login-page admin-signup-page">
+			{/* Panel de bienvenida que contextualiza el registro administrativo. */}
 			<section className="admin-login-visual" aria-label="Registro administrativo Nebula">
 				<div className="admin-login-orbit orbit-one" />
 				<div className="admin-login-orbit orbit-two" />
@@ -20,6 +21,7 @@ function SingUpAdmin({ onBack, onLogin }) {
 				</div>
 			</section>
 
+			{/* Formulario de datos de cuenta y acceso a la pantalla de inicio de sesión. */}
 			<section className="admin-login-form-section">
 				<div className="admin-login-form-wrap">
 					<button type="button" className="admin-login-back" onClick={onBack}>

@@ -58,6 +58,7 @@ function CentrosAyuda() {
         </div>
       </section>
 
+{/* Mapa incrustado para ubicar visualmente la red de apoyo. */}
 <section className="page-section map-section">
         <div className="container">
           <div className="map-wrapper">
@@ -76,6 +77,7 @@ function CentrosAyuda() {
         </div>
       </section>
       
+      {/* Listado de organizaciones con enlace, descripción, ubicación y teléfono. */}
       <section className="page-section">
         <div className="container">
           <div className="info-grid">

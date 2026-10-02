@@ -1,4 +1,4 @@
-﻿// Pasos clave para orientar legalmente a la persona y facilitar una respuesta segura.
+﻿// Pasos de orientación que se presentan en orden como tarjetas dentro de la ruta legal.
 const rutas = [
   {
     title: 'Identifica la situación',
@@ -17,7 +17,7 @@ const rutas = [
   },
 ]
 
-// Explica, de manera resumida, los pasos legales y de cuidado que pueden seguirse.
+// Encabezado y cuadrícula con los pasos de cuidado y orientación disponibles.
 function RutasLegales() {
   return (
     <div className="page-shell">

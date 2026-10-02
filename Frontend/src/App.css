@@ -98,10 +98,17 @@ textarea {
   border-radius: 14px;
   background: #fff;
   color: var(--primary-color);
+  text-align: left;
   font-size: 0.78rem;
   line-height: 1.35;
   box-shadow: 0 8px 22px rgba(75, 29, 114, 0.14);
+  cursor: pointer;
   animation: ai-message-in 0.45s ease both;
+}
+
+.ai-message:hover {
+  border-color: var(--primary-light);
+  box-shadow: 0 12px 26px rgba(75, 29, 114, 0.2);
 }
 
 .ai-message::after {
@@ -118,6 +125,7 @@ textarea {
 }
 
 .logo {
+  /* Agrupa el isotipo y el nombre para formar el enlace de inicio del encabezado. */
   display: flex;
   align-items: center;
   gap: 8px;
@@ -149,6 +157,7 @@ textarea {
 }
 
 .nav {
+  /* Distribuye los accesos principales y permite que se envuelvan si falta espacio. */
   display: flex;
   align-items: center;
   justify-content: center;
@@ -450,6 +459,7 @@ textarea {
 }
 
 .assessment-progress-labels {
+  /* Etiquetas superior e inferior de la barra ilustrativa de progreso. */
   display: flex;
   justify-content: space-between;
   gap: 12px;
@@ -474,6 +484,7 @@ textarea {
 }
 
 .assessment-prompt {
+  /* Texto de invitación que acompaña la vista previa de la autoevaluación. */
   margin: 28px 0 10px;
   color: #45434e;
   font-size: 1.04rem;
@@ -510,6 +521,7 @@ textarea {
 }
 
 .hero-privacy-note {
+  /* Mensaje de privacidad debajo de los botones principales de la portada. */
   display: flex;
   align-items: center;
   gap: 9px;
@@ -685,6 +697,7 @@ h2 {
 }
 
 .service-card {
+  /* Tarjeta vertical que alinea su etiqueta, contenido y enlace de servicio. */
   background: linear-gradient(180deg, #ffffff, #faf5ff);
   border-radius: 18px;
   padding: 28px 24px;
@@ -739,6 +752,7 @@ h2 {
 }
 
 .quick-actions-grid {
+  /* Organiza los accesos directos de la portada en columnas adaptables. */
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
   gap: 26px;
@@ -788,6 +802,7 @@ h2 {
 }
 
 .process-section {
+  /* Fondo y tarjetas para la secuencia educativa de cuatro pasos. */
   background: linear-gradient(180deg, #faf5ff, #f7f2ff);
 }
 
@@ -1230,6 +1245,7 @@ h2 {
 }
 
 .page-section {
+  /* Espaciado compartido para el contenido de las pantallas internas. */
   padding: 60px 0;
 }
 
@@ -1311,6 +1327,7 @@ h2 {
 }
 
 .partners-grid {
+  /* Cuadrícula que presenta las instituciones colaboradoras. */
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(min(100%, 250px), 1fr));
   gap: 24px;
@@ -1318,6 +1335,7 @@ h2 {
 }
 
 .partner-card {
+  /* Tarjeta enlazada de cada organización con imagen y datos de colaboración. */
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -1480,6 +1498,7 @@ h2 {
 }
 
 .admin-login-form-section {
+  /* Columna clara que centra el formulario de inicio de sesión o registro. */
   display: flex;
   align-items: center;
   padding: 64px clamp(28px, 7vw, 110px);
@@ -1514,6 +1533,7 @@ h2 {
 }
 
 .admin-login-heading .eyebrow {
+  /* Ajusta la etiqueta del encabezado para integrarla con el título del formulario. */
   margin-bottom: 14px;
   padding: 0;
   background: none;
@@ -1582,6 +1602,7 @@ h2 {
 }
 
 .admin-login-check {
+  /* Alinea la casilla de consentimiento o persistencia con su texto. */
   display: flex;
   align-items: center;
   gap: 9px;
@@ -1622,6 +1643,7 @@ h2 {
 }
 
 .ai-panel {
+  /* Distribuye los indicadores de IA en columnas que se adaptan al ancho disponible. */
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   gap: 24px;
@@ -2081,6 +2103,8 @@ h2 {
 
 .header-report-button:focus-visible,
 .nav-link:focus-visible,
+.ai-evaluation-button:focus-visible,
+.ai-message:focus-visible,
 .assessment-start:focus-visible,
 .btn-primary:focus-visible,
 .btn-secondary:focus-visible,
@@ -2124,5 +2148,451 @@ h2 {
 
   .map-wrapper {
     padding: 16px;
+  }
+}
+
+.report-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  overflow-y: auto;
+  background: rgba(32, 35, 42, 0.58);
+  animation: report-backdrop-in 0.2s ease both;
+}
+
+.report-modal {
+  position: relative;
+  width: min(100%, 540px);
+  max-height: min(680px, calc(100vh - 40px));
+  overflow-y: auto;
+  padding: 24px;
+  border: 1px solid rgba(255, 255, 255, 0.75);
+  border-radius: 26px;
+  background: #fbfbfa;
+  box-shadow: 0 28px 80px rgba(27, 22, 35, 0.28);
+  animation: report-modal-in 0.25s ease both;
+}
+
+.lookup-modal {
+  width: min(100%, 500px);
+  padding: 28px;
+}
+
+.lookup-modal .report-modal-heading {
+  margin-bottom: 20px;
+}
+
+.lookup-modal .report-modal-heading h2 {
+  font-size: 1.05rem;
+}
+
+.lookup-modal .report-modal-heading p {
+  max-width: 390px;
+  font-size: 0.78rem;
+}
+
+.lookup-modal-icon {
+  display: grid;
+  flex: 0 0 42px;
+  width: 42px;
+  height: 42px;
+  place-items: center;
+  border-radius: 50%;
+  background: #f0edf4;
+  color: var(--primary-color);
+  font-size: 1.55rem;
+  font-weight: 700;
+}
+
+.lookup-form {
+  gap: 10px;
+}
+
+.lookup-form label {
+  margin-top: 0;
+  font-size: 0.78rem;
+}
+
+.lookup-form input[type='text'] {
+  min-height: 42px;
+  font-size: 0.8rem;
+}
+
+.lookup-form .report-submit-button {
+  margin-top: 2px;
+}
+
+.report-modal-close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  display: grid;
+  width: 34px;
+  height: 34px;
+  place-items: center;
+  border: 0;
+  border-radius: 50%;
+  background: #f0edf1;
+  color: #716e79;
+  font-size: 1.5rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.report-modal-close:hover {
+  background: #e8e2eb;
+  color: var(--primary-color);
+}
+
+.report-modal-heading {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding-right: 32px;
+  margin-bottom: 18px;
+}
+
+.report-modal-icon {
+  display: grid;
+  flex: 0 0 42px;
+  width: 42px;
+  height: 42px;
+  place-items: center;
+  border-radius: 14px;
+  background: #f0edf4;
+  color: var(--primary-color);
+  font-size: 1.5rem;
+}
+
+.report-modal-heading h2 {
+  margin: 0;
+  color: var(--text-main);
+  font-size: 1.2rem;
+  line-height: 1.3;
+}
+
+.report-modal-heading p {
+  margin-top: 3px;
+  color: var(--text-muted);
+  font-size: 0.84rem;
+}
+
+.report-form {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.report-form label {
+  margin-top: 3px;
+  color: #55515d;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.report-form input[type='text'],
+.report-form select,
+.report-form textarea,
+.report-form input[type='file'] {
+  width: 100%;
+  min-height: 42px;
+  padding: 9px 13px;
+  border: 1px solid #e3dee6;
+  border-radius: 14px;
+  background: #fff;
+  color: var(--text-main);
+  font: inherit;
+  font-size: 0.88rem;
+}
+
+.report-form select {
+  cursor: pointer;
+}
+
+.report-form textarea {
+  min-height: 76px;
+  resize: vertical;
+}
+
+.report-form input::placeholder,
+.report-form textarea::placeholder {
+  color: #96919b;
+}
+
+.report-form input:focus,
+.report-form select:focus,
+.report-form textarea:focus {
+  border-color: var(--primary-light);
+  outline: 0;
+  box-shadow: 0 0 0 3px rgba(146, 119, 165, 0.14);
+}
+
+.report-form input[type='file'] {
+  padding: 8px;
+  color: var(--text-muted);
+}
+
+.report-form input[type='file']::file-selector-button {
+  margin-right: 12px;
+  padding: 8px 12px;
+  border: 0;
+  border-radius: 999px;
+  background: #f0edf4;
+  color: var(--primary-color);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.report-privacy-note {
+  margin-top: -5px;
+  color: var(--text-muted);
+  font-size: 0.74rem;
+}
+
+.report-confirmation {
+  display: flex;
+  min-height: 340px;
+  align-items: center;
+  flex-direction: column;
+  justify-content: center;
+  padding: 12px 8px 4px;
+  text-align: center;
+}
+
+.report-confirmation-icon {
+  display: grid;
+  width: 58px;
+  height: 58px;
+  place-items: center;
+  margin-bottom: 18px;
+  border-radius: 50%;
+  background: #eaf2ed;
+  color: #597666;
+  font-size: 1.8rem;
+  font-weight: 700;
+}
+
+.report-confirmation h3 {
+  margin-bottom: 8px;
+  color: var(--text-main);
+  font-size: 1.35rem;
+}
+
+.report-confirmation > p {
+  max-width: 430px;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+
+.report-reference {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin: 18px 0 22px;
+  padding: 14px 22px;
+  border: 1px solid #e7e1eb;
+  border-radius: 16px;
+  background: #f4f1f6;
+}
+
+.report-reference span {
+  color: var(--text-muted);
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.report-reference strong {
+  color: var(--primary-color);
+  font-size: 1.25rem;
+  letter-spacing: 0.06em;
+}
+
+.report-submit-button {
+  display: flex;
+  min-height: 44px;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 6px;
+  padding: 10px 18px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--primary-color);
+  color: #fff;
+  font: inherit;
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.report-modal-close:focus-visible,
+.report-submit-button:focus-visible {
+  outline: 3px solid rgba(113, 141, 128, 0.55);
+  outline-offset: 3px;
+}
+
+.report-lookup-section {
+  /* Bloque de portada con accesos para consultar o iniciar un reporte anónimo. */
+  padding: 28px 0;
+  background: #fbfbfa;
+}
+
+.report-lookup-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(260px, 1fr);
+  gap: 18px;
+}
+
+.report-lookup-card {
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+  padding: 24px;
+  border: 1px solid #e8e4e9;
+  border-radius: 20px;
+  background: #f1eff4;
+  box-shadow: 0 4px 10px rgba(55, 46, 62, 0.06);
+}
+
+.report-create-card {
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+  padding: 24px;
+  border: 1px solid #e8e4e9;
+  border-radius: 20px;
+  background: #fbfafb;
+  box-shadow: 0 4px 10px rgba(55, 46, 62, 0.04);
+}
+
+.report-lookup-icon {
+  display: inline-flex;
+  margin-bottom: 16px;
+  color: var(--primary-color);
+  font-size: 1.15rem;
+}
+
+.report-create-eyebrow {
+  margin-bottom: 16px;
+  color: var(--text-muted);
+  font-size: 0.66rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.report-lookup-card h2 {
+  margin-bottom: 8px;
+  color: var(--text-main);
+  font-size: 1.25rem;
+}
+
+.report-create-card h2 {
+  margin-bottom: 8px;
+  color: var(--text-main);
+  font-size: 1.2rem;
+  line-height: 1.35;
+}
+
+.report-lookup-card p {
+  max-width: 560px;
+  margin-bottom: 18px;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+
+.report-create-card p {
+  margin-bottom: 18px;
+  color: var(--text-muted);
+  font-size: 0.82rem;
+  line-height: 1.55;
+}
+
+.report-lookup-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--primary-color);
+  font: inherit;
+  font-size: 0.86rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.report-create-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: auto;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--accent-hover);
+  font: inherit;
+  font-size: 0.86rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.report-lookup-link:focus-visible {
+  border-radius: 4px;
+  outline: 3px solid rgba(113, 141, 128, 0.45);
+  outline-offset: 4px;
+}
+
+.report-create-link:focus-visible {
+  border-radius: 4px;
+  outline: 3px solid rgba(113, 141, 128, 0.45);
+  outline-offset: 4px;
+}
+
+@keyframes report-backdrop-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes report-modal-in {
+  from { opacity: 0; transform: translateY(12px) scale(0.98); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@media (max-width: 520px) {
+  .report-lookup-section {
+    padding: 20px 0;
+  }
+
+  .report-lookup-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .report-lookup-card {
+    padding: 20px;
+  }
+
+  .report-create-card {
+    padding: 20px;
+  }
+
+  .report-modal-backdrop {
+    padding: 12px;
+  }
+
+  .report-modal {
+    max-height: calc(100vh - 24px);
+    padding: 24px 18px;
+    border-radius: 22px;
+  }
+
+  .lookup-modal {
+    padding: 24px 18px;
   }
 }

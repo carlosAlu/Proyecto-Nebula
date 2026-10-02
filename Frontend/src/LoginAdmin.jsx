@@ -3,6 +3,7 @@ function LoginAdmin({ onBack, onSignup }) {
 
 	return (
 		<div className="admin-login-page">
+			{/* Panel visual que identifica la zona protegida de administración. */}
 			<section className="admin-login-visual" aria-label="Acceso administrativo Nebula">
 				<div className="admin-login-orbit orbit-one" />
 				<div className="admin-login-orbit orbit-two" />
@@ -21,6 +22,7 @@ function LoginAdmin({ onBack, onSignup }) {
 				</div>
 			</section>
 
+			{/* Formulario de acceso y enlaces para volver o iniciar el registro. */}
 			<section className="admin-login-form-section">
 				<div className="admin-login-form-wrap">
 					<button type="button" className="admin-login-back" onClick={onBack}>

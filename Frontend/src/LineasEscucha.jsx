@@ -1,4 +1,4 @@
-﻿// Datos principales de líneas de ayuda, emergencia y acompañamiento emocional.
+// Contenido de cada tarjeta: nombre del servicio, propósito, número o disponibilidad e icono.
 const info = [
   {
     title: 'Línea Nacional de Emergencia',
@@ -20,7 +20,7 @@ const info = [
   },
 ]
 
-// Pantalla que presenta las líneas de escucha y números de apoyo disponibles.
+// Presenta el encabezado informativo y genera una tarjeta por cada canal definido en info.
 function LineaEscucha() {
   return (
     <div className="page-shell">
