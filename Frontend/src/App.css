@@ -3032,6 +3032,14 @@ h2 {
   font-size: 4.5rem;
 }
 
+.ai-hero-avatar {
+  width: 205px;
+  max-width: none;
+  height: 205px;
+  object-fit: contain;
+  filter: drop-shadow(0 12px 18px rgba(75, 29, 114, 0.18));
+}
+
 .ai-page-shell .page-section.ai-workspace {
   padding: 48px 0 76px;
   background: #f7f4f8;
@@ -3365,6 +3373,19 @@ h2 {
   --chat--header--color: #f0eaf4;
   --chat--message--bot--background: #393440;
   --chat--message--bot--color: #f0eaf4;
+}
+
+:root[data-theme='dark'] #nebula-ai-chat textarea,
+:root[data-theme='dark'] #nebula-ai-chat input {
+  background-color: #fff !important;
+  color: #352c3b !important;
+  caret-color: #352c3b;
+}
+
+:root[data-theme='dark'] #nebula-ai-chat textarea::placeholder,
+:root[data-theme='dark'] #nebula-ai-chat input::placeholder {
+  color: #756c79 !important;
+  opacity: 1;
 }
 
 :root[data-theme='dark'] .ai-chat-caption {

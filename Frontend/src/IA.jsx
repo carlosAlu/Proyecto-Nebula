@@ -1,9 +1,34 @@
 import { useEffect, useState } from 'react'
+import miImagen from './assets/Circ_AI.png'
+import miImagenParpadeo from './assets/Circ_Ai_Parpadeo.png'
 
 // Vista dedicada a la evaluación de la IA, con un espacio para análisis o apoyo automatizado.
 function IA() {
 	const [chatError, setChatError] = useState('')
 	const [isChatReady, setIsChatReady] = useState(false)
+	const [isAiBlinking, setIsAiBlinking] = useState(false)
+
+	useEffect(() => {
+		let blinkTimer
+		let openEyesTimer
+
+		const scheduleBlink = () => {
+			blinkTimer = window.setTimeout(() => {
+				setIsAiBlinking(true)
+				openEyesTimer = window.setTimeout(() => {
+					setIsAiBlinking(false)
+					scheduleBlink()
+				}, 140)
+			}, 2800 + Math.random() * 4200)
+		}
+
+		scheduleBlink()
+
+		return () => {
+			window.clearTimeout(blinkTimer)
+			window.clearTimeout(openEyesTimer)
+		}
+	}, [])
 
 	useEffect(() => {
 		let isActive = true
@@ -65,7 +90,7 @@ function IA() {
 						<span className="eyebrow"><span aria-hidden="true">✦</span> Orientación virtual</span>
 						<h1>Un espacio para hablar, <span>a tu ritmo.</span></h1>
 						<p>
-							Comparte tus dudas con nuestro asistente y recibe orientación para
+							Comparte tus dudas con nuestro asistente AI y recibe orientación para
 							explorar tus opciones de apoyo.
 						</p>
 						<div className="ai-hero-note">
@@ -73,8 +98,12 @@ function IA() {
 							No necesitas tener todas las respuestas para empezar.
 						</div>
 					</div>
-					<div className="ai-hero-orbit" aria-hidden="true">
-						<span>✧</span>
+					<div >
+						<img
+							className="ai-hero-avatar"
+							src={isAiBlinking ? miImagenParpadeo : miImagen}
+							alt=""
+						/>
 					</div>
 				</div>
 			</section>
