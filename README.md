@@ -21,7 +21,7 @@ Nebula es una plataforma web de orientación y prevención de la violencia contr
 
 El repositorio contiene una aplicación frontend funcional construida con React y Vite. Las vistas y formularios descritos abajo están disponibles en la interfaz, pero algunas funciones siguen siendo demostrativas:
 
-- `Backend/` está reservado para el backend; actualmente no contiene una API implementada.
+- `Backend/` contiene una API base con comprobación de salud y conexión opcional a MongoDB; todavía no implementa autenticación ni persistencia de reportes.
 - El inicio de sesión y el registro de administración no autentican ni crean cuentas.
 - El panel de administración muestra módulos de ejemplo; no guarda ni gestiona información.
 - Los formularios de reporte y consulta no envían ni recuperan datos de un servicio.
@@ -47,9 +47,10 @@ El repositorio contiene una aplicación frontend funcional construida con React 
 - React 19
 - Vite 8
 - JavaScript y CSS
+- Node.js y Express para la API base
 - ESLint
 - Chat de n8n cargado desde jsDelivr
-- MongoDB 7 definido como infraestructura opcional en `docker-compose.yml`; todavía no está conectado a la aplicación
+- MongoDB 7 definido como infraestructura opcional en `docker-compose.yml` y compatible con la API mediante `MONGODB_URI`
 
 ## Requisitos
 
@@ -60,7 +61,7 @@ El repositorio contiene una aplicación frontend funcional construida con React 
 
 ## Instalación y ejecución
 
-Los comandos de npm se ejecutan desde la carpeta `Frontend/`.
+Los comandos del frontend se ejecutan desde la carpeta `Frontend/`.
 
 ```sh
 cd Frontend
@@ -69,6 +70,15 @@ npm run dev
 ```
 
 Vite mostrará en la terminal la dirección local para abrir la aplicación, normalmente `http://localhost:5173`.
+
+Para iniciar la API, ejecuta desde `Backend/`:
+
+```sh
+npm install
+npm start
+```
+
+La API escucha en el puerto `3000` por defecto (se puede cambiar con `PORT`). `GET /health` informa el estado del servidor y MongoDB. Si MongoDB no está configurado o disponible, el servidor sigue iniciando, pero `/health` responde con estado `503` y `"status": "degraded"`. Configura `MONGODB_URI` para conectar la base de datos; también se acepta `MONGO_URI` por compatibilidad.
 
 En PowerShell también puedes ejecutar los comandos desde la raíz del repositorio:
 
@@ -99,7 +109,7 @@ npm run build
 
 ```text
 .
-├── Backend/                   # Reservado para el backend (sin API implementada)
+├── Backend/                   # API base y conexión opcional con MongoDB
 ├── Frontend/
 │   ├── public/                # Recursos estáticos públicos
 │   ├── src/
@@ -129,7 +139,7 @@ La carga del chat requiere conexión a Internet y disponibilidad de jsDelivr y d
 
 ### MongoDB
 
-`docker-compose.yml` define tres procesos MongoDB 7 con el nombre de replica set `rsBanco`, expuestos en los puertos `27017`, `27018` y `27019`. Son una infraestructura local opcional: el archivo no implementa una API, no inicializa por sí solo el replica set y la aplicación frontend no se conecta a estas bases de datos.
+`docker-compose.yml` define tres procesos MongoDB 7 con el nombre de replica set `rsBanco`, expuestos en los puertos `27017`, `27018` y `27019`. La API acepta `MONGODB_URI` (o `MONGO_URI`) para conectarse; MongoDB sigue siendo opcional para iniciar el servidor. El archivo no inicializa por sí solo el replica set y la aplicación frontend todavía no consume la API.
 
 Con Docker Compose instalado, los servicios se pueden iniciar y detener desde la raíz del repositorio:
 
@@ -150,7 +160,7 @@ No ejecutes el stack de MongoDB a menos que estés trabajando en esa integració
 
 ## Próximos pasos
 
-1. Implementar una API y definir el esquema de datos y permisos.
+1. Ampliar la API y definir el esquema de datos y permisos.
 2. Conectar de forma segura autenticación, administración, reportes y consulta de folios.
 3. Configurar MongoDB y su replica set, si se confirma que formará parte de la arquitectura.
 4. Revisar y validar con especialistas el cuestionario, su cálculo de riesgo y los recursos de apoyo.

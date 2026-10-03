@@ -1,40 +1,80 @@
-require("dotenv").config();
-
+const path = require("node:path");
+const dotenv = require("dotenv");
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 
-const app = express();
-const authRoutes = require("./src/routes/authRoutes");
-const transferenciaRoutes = require("./src/routes/transferenciaRoutes");
-const auditoriaRoutes = require("./src/routes/auditoriaRoutes");
-const dashboardRoutes = require("./src/routes/dashboardRoutes");
-const cuentaDestinoRoutes = require("./src/routes/cuentaDestinoRoutes");
+dotenv.config({ path: path.join(__dirname, ".env") });
 
+const app = express();
+app.disable("x-powered-by");
 app.use(cors());
 app.use(express.json());
-app.use("/api/auth", authRoutes);
-app.use("/api/transferencias", transferenciaRoutes);
-app.use("/api/auditorias", auditoriaRoutes);
-app.use("/api/dashboard", dashboardRoutes);
-app.use("/api/cuentas-destino", cuentaDestinoRoutes);
 
-mongoose.connect(process.env.MONGO_URI)
-.then(() => {
-    console.log("✅ MongoDB Atlas conectado");
-})
-.catch((error) => {
-    console.error("❌ Error MongoDB:", error);
-});
+const databaseStates = {
+    0: "disconnected",
+    1: "connected",
+    2: "connecting",
+    3: "disconnecting"
+};
 
-app.get("/", (req, res) => {
+app.get("/", (_req, res) => {
     res.json({
-        mensaje: "Banco Nexus Cloud API funcionando"
+        service: "nebula-api",
+        status: "running",
+        health: "/health"
     });
 });
 
-const PORT = process.env.PORT || 3000;
+app.get("/health", (_req, res) => {
+    const databaseStatus = databaseStates[mongoose.connection.readyState] || "unknown";
+    const isDatabaseConnected = databaseStatus === "connected";
 
-app.listen(PORT, () => {
-    console.log(`🚀 Servidor ejecutándose en puerto ${PORT}`);
+    res.status(isDatabaseConnected ? 200 : 503).json({
+        service: "nebula-api",
+        status: isDatabaseConnected ? "ok" : "degraded",
+        database: {
+            status: databaseStatus
+        }
+    });
 });
+
+app.use((_req, res) => {
+    res.status(404).json({ error: "Ruta no encontrada" });
+});
+
+async function connectDatabase() {
+    const uri = process.env.MONGODB_URI || process.env.MONGO_URI;
+    if (!uri) {
+        console.error("MONGODB_URI no está configurada; el servidor iniciará sin conexión a MongoDB.");
+        return;
+    }
+
+    try {
+        await mongoose.connect(uri, { serverSelectionTimeoutMS: 5000 });
+        console.log("MongoDB conectado.");
+    } catch (error) {
+        console.error("No se pudo conectar a MongoDB:", error.message);
+    }
+}
+
+function startServer() {
+    const port = Number(process.env.PORT) || 3000;
+    const server = app.listen(port, () => {
+        console.log(`Nebula API ejecutándose en el puerto ${port}.`);
+    });
+
+    server.on("error", (error) => {
+        console.error("No se pudo iniciar el servidor:", error.message);
+        process.exitCode = 1;
+    });
+
+    void connectDatabase();
+    return server;
+}
+
+if (require.main === module) {
+    startServer();
+}
+
+module.exports = { app, startServer };
