@@ -31,7 +31,7 @@ El repositorio contiene una aplicación frontend funcional construida con React 
 ## Funciones disponibles
 
 - **Inicio y navegación:** portada con accesos a las secciones principales. La navegación interna utiliza fragmentos de URL, por ejemplo `#centros` o `#ia`.
-- **Autoevaluación:** diálogo de 15 preguntas, seleccionadas dinámicamente de un banco de 45 preguntas según las respuestas anteriores. Ofrece cinco respuestas, incluida la opción de no responder, y presenta un nivel orientativo al final.
+- **Autoevaluación:** diálogo con los 15 reactivos del mapeo, ponderados por nivel (Advertencia, Reacción y Peligro). Las respuestas positivas priorizan reactivos relacionados; el resultado conserva las conductas identificadas y muestra una puntuación normalizada orientativa.
 - **Líneas de escucha:** información de orientación y canales de atención.
 - **Centros de ayuda:** directorio y mapa de recursos de apoyo.
 - **Módulos preventivos:** materiales y herramientas de prevención.

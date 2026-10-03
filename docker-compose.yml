@@ -1,21 +1,26 @@
 services:
-  mongo1:
-    image: mongo:7
-    container_name: mongo1
-    command: ["mongod", "--replSet", "rsBanco", "--bind_ip_all", "--port", "27017"]
+  backend:
+    build:
+      context: ./Backend
+    image: banco-nexus-backend:latest
     ports:
-      - "27017:27017"
+      - "3000:3000"
+    env_file:
+      - ./Backend/.env
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
 
-  mongo2:
-    image: mongo:7
-    container_name: mongo2
-    command: ["mongod", "--replSet", "rsBanco", "--bind_ip_all", "--port", "27017"]
+  frontend:
+    build:
+      context: ./Frontend
+    image: banco-nexus-frontend:latest
     ports:
-      - "27018:27017"
-
-  mongo3:
-    image: mongo:7
-    container_name: mongo3
-    command: ["mongod", "--replSet", "rsBanco", "--bind_ip_all", "--port", "27017"]
-    ports:
-      - "27019:27017"
+      - "8080:80"
+    depends_on:
+      - backend
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
