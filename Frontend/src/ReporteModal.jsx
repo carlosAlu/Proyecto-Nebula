@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react'
 
+// Modal de captura demostrativa; todavía no envía reportes a un servidor.
 function ReporteModal({ onClose }) {
+  // Alterna el formulario con un mensaje de confirmación de ejemplo.
   const [showConfirmation, setShowConfirmation] = useState(false)
 
   // Bloquea el scroll de fondo mientras el diálogo está abierto y habilita Escape para cerrarlo.

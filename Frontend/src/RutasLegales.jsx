@@ -21,6 +21,7 @@ const rutas = [
 function RutasLegales() {
   return (
     <div className="page-shell">
+      {/* Explica que los pasos son orientación general para buscar apoyo. */}
       <section className="page-header compact-hero">
         <div className="container">
           <span className="eyebrow">Rutas legales</span>

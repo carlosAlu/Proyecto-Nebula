@@ -1,5 +1,27 @@
+import { useState } from 'react'
+import { loginAdmin } from './adminAuthApi.js'
+
 // Formulario de acceso para administradores del sistema Nebula.
-function LoginAdmin({ onBack, onSignup }) {
+function LoginAdmin({ onBack, onSignup, onAuthenticated, initialError = '' }) {
+	// Conserva errores visibles y evita solicitudes duplicadas mientras valida credenciales.
+	const [error, setError] = useState(initialError)
+	const [isSubmitting, setIsSubmitting] = useState(false)
+
+	// Envía los campos al backend y abre el panel solo si la API confirma el acceso.
+	const handleSubmit = async (event) => {
+		event.preventDefault()
+		setError('')
+		setIsSubmitting(true)
+
+		try {
+			await loginAdmin(Object.fromEntries(new FormData(event.currentTarget)))
+			onAuthenticated()
+		} catch (requestError) {
+			setError(requestError.message)
+		} finally {
+			setIsSubmitting(false)
+		}
+	}
 
 	return (
 		<div className="admin-login-page">
@@ -35,8 +57,8 @@ function LoginAdmin({ onBack, onSignup }) {
 						<p>Ingresa tus datos para continuar al panel de gestión.</p>
 					</div>
 
-					{/* Evita el envío y la recarga del navegador; aquí aún no se conecta la autenticación. */}
-					<form className="admin-login-form" onSubmit={(event) => event.preventDefault()}>
+					{/* Captura credenciales para enviarlas directamente al servicio de autenticación. */}
+					<form className="admin-login-form" onSubmit={handleSubmit}>
 						<label htmlFor="admin-email">Correo electrónico</label>
 						<input
 							id="admin-email"
@@ -44,26 +66,24 @@ function LoginAdmin({ onBack, onSignup }) {
 							type="email"
 							placeholder="admin@nebula.org"
 							autoComplete="username"
+							maxLength={254}
+							required
 						/>
 
-						<div className="admin-login-label-row">
-							<label htmlFor="admin-password">Contraseña</label>
-							<button type="button" className="admin-login-recovery">¿Olvidaste tu contraseña?</button>
-						</div>
+						<label htmlFor="admin-password">Contraseña</label>
 						<input
 							id="admin-password"
 							name="password"
 							type="password"
 							placeholder="Ingresa tu contraseña"
 							autoComplete="current-password"
+							required
 						/>
 
-						<label className="admin-login-check">
-							<input type="checkbox" name="remember" />
-							<span>Recordar sesión en este dispositivo</span>
-						</label>
-
-						<button type="submit" className="admin-login-submit">Entrar al panel</button>
+						{error && <p className="admin-auth-error" role="alert">{error}</p>}
+						<button type="submit" className="admin-login-submit" disabled={isSubmitting}>
+							{isSubmitting ? 'Validando…' : 'Entrar al panel'}
+						</button>
 					</form>
 
 					<p className="admin-login-note">
@@ -79,5 +99,4 @@ function LoginAdmin({ onBack, onSignup }) {
 		</div>
 	)
 }
-
 export default LoginAdmin

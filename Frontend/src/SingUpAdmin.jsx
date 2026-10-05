@@ -1,5 +1,44 @@
-// Formulario de registro para nuevos administradores o colaboradores del proyecto.
-function SingUpAdmin({ onBack, onLogin }) {
+import { useState } from 'react'
+import { registerAdmin } from './adminAuthApi.js'
+
+// Formulario de registro para administradores autorizados del proyecto.
+function SingUpAdmin({ onBack, onLogin, onAuthenticated, initialError = '' }) {
+	// Estado de validación visible y control del envío del formulario.
+	const [error, setError] = useState(initialError)
+	const [isSubmitting, setIsSubmitting] = useState(false)
+
+	// Comprueba confirmación y aceptación localmente antes de pedir el registro al backend.
+	const handleSubmit = async (event) => {
+		event.preventDefault()
+		const form = event.currentTarget
+		const values = Object.fromEntries(new FormData(form))
+
+		if (values.password !== values.confirmPassword) {
+			setError('Las contraseñas no coinciden.')
+			return
+		}
+		if (!values.terms) {
+			setError('Debes aceptar los términos de uso y privacidad.')
+			return
+		}
+
+		setError('')
+		setIsSubmitting(true)
+		try {
+			await registerAdmin({
+				nombre: values.name,
+				email: values.email,
+				password: values.password,
+				aceptaTerminos: values.terms === 'on',
+			})
+			onAuthenticated()
+		} catch (requestError) {
+			setError(requestError.message)
+		} finally {
+			setIsSubmitting(false)
+		}
+	}
+
 	return (
 		<div className="admin-login-page admin-signup-page">
 			{/* Panel de bienvenida que contextualiza el registro administrativo. */}
@@ -34,8 +73,8 @@ function SingUpAdmin({ onBack, onLogin }) {
 						<p>Registra tus datos para solicitar acceso al panel administrativo.</p>
 					</div>
 
-					{/* Evita el envío y la recarga del navegador; el registro aún no está conectado a un servicio. */}
-					<form className="admin-login-form" onSubmit={(event) => event.preventDefault()}>
+					{/* Recopila los datos de la cuenta; el backend decide si el correo está autorizado. */}
+					<form className="admin-login-form" onSubmit={handleSubmit}>
 						<label htmlFor="admin-signup-name">Nombre completo</label>
 						<input
 							id="admin-signup-name"
@@ -43,6 +82,9 @@ function SingUpAdmin({ onBack, onLogin }) {
 							type="text"
 							placeholder="Escribe tu nombre"
 							autoComplete="name"
+							minLength={2}
+							maxLength={100}
+							required
 						/>
 
 						<label htmlFor="admin-signup-email">Correo electrónico</label>
@@ -52,6 +94,8 @@ function SingUpAdmin({ onBack, onLogin }) {
 							type="email"
 							placeholder="admin@nebula.org"
 							autoComplete="email"
+							maxLength={254}
+							required
 						/>
 
 						<label htmlFor="admin-signup-password">Contraseña</label>
@@ -61,6 +105,9 @@ function SingUpAdmin({ onBack, onLogin }) {
 							type="password"
 							placeholder="Crea una contraseña"
 							autoComplete="new-password"
+							minLength={12}
+							maxLength={72}
+							required
 						/>
 
 						<label htmlFor="admin-signup-confirm-password">Confirmar contraseña</label>
@@ -70,16 +117,25 @@ function SingUpAdmin({ onBack, onLogin }) {
 							type="password"
 							placeholder="Repite tu contraseña"
 							autoComplete="new-password"
+							minLength={12}
+							maxLength={72}
+							required
 						/>
 
 						<label className="admin-login-check">
-							<input type="checkbox" name="terms" />
+							<input type="checkbox" name="terms" required />
 							<span>Acepto los términos de uso y privacidad</span>
 						</label>
 
-						<button type="submit" className="admin-login-submit">Crear cuenta</button>
+						{error && <p className="admin-auth-error" role="alert">{error}</p>}
+						<button type="submit" className="admin-login-submit" disabled={isSubmitting}>
+							{isSubmitting ? 'Creando cuenta…' : 'Crear cuenta'}
+						</button>
 					</form>
 
+					<p className="admin-login-note">
+						El registro solo está disponible para correos autorizados por el equipo.
+					</p>
 					<p className="admin-login-switch">
 						¿Ya tienes una cuenta?{' '}
 						<button type="button" onClick={onLogin}>Inicia sesión</button>

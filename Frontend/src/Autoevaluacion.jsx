@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 
+// Opciones de respuesta y valor que aporta cada una al cálculo orientativo.
 const answers = [
   { label: 'Nunca', score: 0 },
   { label: 'Algunas veces', score: 1 },
@@ -8,6 +9,7 @@ const answers = [
   { label: 'Prefiero no responder', score: null },
 ]
 
+// Reactivos ordenados por nivel; algunos enlazan preguntas relacionadas para ampliar la orientación.
 const questions = [
   {
     id: 'A01', level: 'warning', weight: 1, conduct: 'Descalificación / ridiculización',
@@ -75,6 +77,7 @@ const questions = [
   },
 ]
 
+// Mensajes que acompañan cada resultado sin presentarlo como diagnóstico profesional.
 const riskLevels = {
   warning: {
     label: 'Advertencia',
@@ -98,8 +101,10 @@ const riskLevels = {
   },
 }
 
+// Orden numérico usado para elegir el nivel de mayor riesgo señalado.
 const levelOrder = { warning: 1, reaction: 2, danger: 3 }
 
+// Calcula puntuación normalizada, conductas señaladas y el nivel más alto respondido.
 function getResult(responses, questionOrder) {
   const answered = responses
     .map((response, index) => ({
@@ -135,12 +140,14 @@ function getResult(responses, questionOrder) {
 }
 
 function Autoevaluacion({ onClose, onFindSupport }) {
+  // Conserva el orden adaptativo, el avance y las respuestas mientras el modal está abierto.
   const [questionOrder, setQuestionOrder] = useState(questions.map(({ id }) => id))
   const [currentIndex, setCurrentIndex] = useState(0)
   const [responses, setResponses] = useState([])
   const [selectedAnswer, setSelectedAnswer] = useState(null)
   const [showResult, setShowResult] = useState(false)
 
+  // Mantiene la ventana modal abierta, bloquea el scroll de fondo y permite cerrarla con Escape.
   useEffect(() => {
     const handleKeyDown = (event) => {
       if (event.key === 'Escape') onClose()
@@ -159,6 +166,7 @@ function Autoevaluacion({ onClose, onFindSupport }) {
   const question = questions.find(({ id }) => id === questionOrder[currentIndex])
   const progress = ((currentIndex + 1) / questionOrder.length) * 100
 
+  // Guarda la respuesta actual y adelanta preguntas relacionadas cuando la respuesta lo amerita.
   const continueAssessment = () => {
     if (!selectedAnswer) return
 
@@ -186,12 +194,14 @@ function Autoevaluacion({ onClose, onFindSupport }) {
     setSelectedAnswer(null)
   }
 
+  // Regresa a la pregunta anterior y restaura la opción que ya se había elegido.
   const goBack = () => {
     if (currentIndex === 0) return
     setCurrentIndex((index) => index - 1)
     setSelectedAnswer(responses[currentIndex - 1])
   }
 
+  // Reinicia el cuestionario y devuelve el orden original de las preguntas.
   const restart = () => {
     setQuestionOrder(questions.map(({ id }) => id))
     setCurrentIndex(0)
@@ -210,6 +220,7 @@ function Autoevaluacion({ onClose, onFindSupport }) {
         aria-modal="true"
         aria-labelledby="assessment-title"
       >
+        {/* Presenta una pregunta por pantalla; al terminar, cambia a la orientación calculada. */}
         {!showResult ? (
           <>
             <header className="assessment-modal-header">

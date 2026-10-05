@@ -4,10 +4,12 @@ import miImagenParpadeo from './assets/Circ_Ai_Parpadeo.png'
 
 // Vista dedicada a la evaluación de la IA, con un espacio para análisis o apoyo automatizado.
 function IA() {
+	// Estado de carga/error del chat y animación del avatar.
 	const [chatError, setChatError] = useState('')
 	const [isChatReady, setIsChatReady] = useState(false)
 	const [isAiBlinking, setIsAiBlinking] = useState(false)
 
+	// Programa el parpadeo decorativo del avatar y limpia ambos temporizadores al salir.
 	useEffect(() => {
 		let blinkTimer
 		let openEyesTimer
@@ -30,6 +32,7 @@ function IA() {
 		}
 	}, [])
 
+	// Descarga el chat de n8n bajo demanda y desmonta sus recursos al cerrar esta pantalla.
 	useEffect(() => {
 		let isActive = true
 		let chat
@@ -51,6 +54,7 @@ function IA() {
 				if (!isActive) return
 
 				chat = createChat({
+					// El webhook recibe los mensajes; no enviar datos personales al asistente.
 					webhookUrl: 'https://cjimenez20.app.n8n.cloud/webhook/908960a5-4aed-422f-8752-6851ecefd2d1/chat',
 					target: '#nebula-ai-chat',
 					mode: 'fullscreen',
@@ -84,6 +88,7 @@ function IA() {
 
 	return (
 		<div className="page-shell ai-page-shell">
+			{/* Encabezado presenta el propósito del asistente y su avatar animado. */}
 			<section className="page-header ai-hero">
 				<div className="container ai-hero-content">
 					<div className="ai-hero-copy">
@@ -108,6 +113,7 @@ function IA() {
 				</div>
 			</section>
 
+			{/* Área de conversación cargada por n8n y recordatorios de uso seguro. */}
 			<section className="page-section ai-workspace">
 				<div className="container ai-workspace-grid">
 					<div className="ai-chat-column">

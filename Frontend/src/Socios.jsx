@@ -1,3 +1,4 @@
+// Imagen local que reemplaza imágenes de aliados que ya no estén disponibles.
 import defaultImage from './assets/ImagenDefault.jpg'
 
 // Datos de las instituciones aliadas: nombre, tipo de colaboración, enlace e imagen.
@@ -44,6 +45,12 @@ const partners = [
 		url: 'https://www.compuserviciosbcs.com',
 		image: 'https://lh3.googleusercontent.com/gps-cs-s/AHRPTWkSvHYBQEkJoI6X-D6UjmxXi-yvQgPNyMaVYnxw5YcsNM68CxSDUgCuhxxk5C2QST0Uwg3z4fzYLSwbztmccoJMBD8NFM5ZC3x5oNes-CciPAR7hncj_8NDMLe2XYxOjCjNYIcX1whIrmDK=s1360-w1360-h1020-rw',
 	},
+	{
+		name: 'Ingenieria De Las Californias',
+		type: 'Institución privada',
+		url: 'https://www.facebook.com/ingenieriadelascalifornias/?locale=es_LA',
+		image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSoiTABaF4BsfjSklk6tyUkkQPbiSAwe9cZTtI4yh1FDOntrvEWjbzDzdaM&s=10',
+	},
 
 
 ]
@@ -52,6 +59,7 @@ const partners = [
 function Socios() {
 	return (
 		<div id="socios" className="page-shell">
+			{/* Presenta la red institucional que colabora con Nebula. */}
 			<section className="page-header compact-hero">
 				<div className="container">
 					<span className="eyebrow">Red Nebula</span>

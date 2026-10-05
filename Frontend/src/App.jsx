@@ -1,4 +1,5 @@
 ﻿import { useEffect, useState } from 'react'
+import { getAdminSession, logoutAdmin } from './adminAuthApi.js'
 import './App.css'
 import LineaEscucha from './LineasEscucha.jsx'
 import CentrosAyuda from './CentrosAyuda.jsx'
@@ -61,6 +62,7 @@ const pageRoutes = [
 
 const homeSections = ['inicio', 'pilares', 'nosotros', 'servicios', 'proceso', 'contacto']
 
+// Destino que abre el botón de salida rápida para cambiar de página de inmediato.
 const quickExitUrl = 'https://www.shein.com.mx/?onelink=10/4ivi7j3cevpg&requestId=olw-61pykflxywwa&url_from=affiliate_af_b_68_181_0&affiliateID=af_b_sub_13861&click_id=gx-mx-shein-shein-ssd&sub_id=browser&campaign_id=SPDL&source_id=opera&placement_id=SPDL&network=%7Bnetwork%7D&keyword=%7Bkeyword%7D&cdn_rsite=ak&ref=www&rep=dir&ret=mx'
 
 // Textos que se alternan en el globo junto al acceso flotante de IA.
@@ -92,6 +94,7 @@ function getRouteFromHash() {
 // Componente principal de Nebula. Gestiona la navegación entre secciones,
 // la vista de inicio y la renderización de pantallas internas.
 function App() {
+  // Estado compartido de navegación, apariencia, ventanas modales y sesión administrativa.
   const [activePage, setActivePage] = useState(() => getRouteFromHash().page)
   const [activeSection, setActiveSection] = useState(() => getRouteFromHash().section)
   const [isDarkMode, setIsDarkMode] = useState(
@@ -102,7 +105,36 @@ function App() {
   const [isReportModalOpen, setIsReportModalOpen] = useState(false)
   const [isReportLookupOpen, setIsReportLookupOpen] = useState(false)
   const [isAssessmentModalOpen, setIsAssessmentModalOpen] = useState(false)
+  const [isAdminAuthenticated, setIsAdminAuthenticated] = useState(false)
+  const [isCheckingAdminSession, setIsCheckingAdminSession] = useState(
+    () => getRouteFromHash().page === 'admin',
+  )
+  const [adminSessionError, setAdminSessionError] = useState('')
 
+  // Confirma en el backend que la cookie corresponde a una sesión administrativa vigente.
+  useEffect(() => {
+    if (activePage !== 'admin' || isAdminAuthenticated) return undefined
+
+    let isCurrent = true
+    getAdminSession()
+      .then(() => {
+        if (isCurrent) setIsAdminAuthenticated(true)
+      })
+      .catch((error) => {
+        if (isCurrent && error.message !== 'Inicia sesión para continuar.' && !error.message.includes('sesión expiró')) {
+          setAdminSessionError(error.message)
+        }
+      })
+      .finally(() => {
+        if (isCurrent) setIsCheckingAdminSession(false)
+      })
+
+    return () => {
+      isCurrent = false
+    }
+  }, [activePage, isAdminAuthenticated])
+
+  // Aplica el tema seleccionado y lo conserva para la próxima visita.
   useEffect(() => {
     const theme = isDarkMode ? 'dark' : 'light'
     document.documentElement.dataset.theme = theme
@@ -115,6 +147,8 @@ function App() {
       const route = getRouteFromHash()
       setActivePage(route.page)
       setActiveSection(route.section)
+      setIsCheckingAdminSession(route.page === 'admin' && !isAdminAuthenticated)
+      setAdminSessionError('')
     }
 
     window.addEventListener('popstate', syncRoute)
@@ -124,7 +158,7 @@ function App() {
       window.removeEventListener('popstate', syncRoute)
       window.removeEventListener('hashchange', syncRoute)
     }
-  }, [])
+  }, [isAdminAuthenticated])
 
   // Alterna mensajes breves de bienvenida y limpia los temporizadores al desmontar.
   useEffect(() => {
@@ -201,11 +235,13 @@ function App() {
     }
   }
 
+  // Actualiza URL y estado para cambiar de pantalla sin recargar la aplicación.
   const navigateToPage = (page) => {
     const destination = page === 'home' ? 'inicio' : page
     updateLocation(destination)
     setActivePage(page)
     setActiveSection(null)
+    setIsCheckingAdminSession(page === 'admin' && !isAdminAuthenticated)
   }
 
   const navigateToSection = (sectionId) => {
@@ -221,6 +257,21 @@ function App() {
 
   const openAssessment = () => setIsAssessmentModalOpen(true)
 
+  // Completa el inicio de sesión tras una respuesta exitosa del servidor.
+  const completeAdminAuthentication = () => {
+    setAdminSessionError('')
+    setIsAdminAuthenticated(true)
+    navigateToPage('admin')
+    setIsCheckingAdminSession(false)
+  }
+
+  // Elimina la sesión del servidor antes de regresar a la pantalla de acceso.
+  const handleAdminLogout = async () => {
+    await logoutAdmin()
+    setIsAdminAuthenticated(false)
+    navigateToPage('login-admin')
+  }
+
   // Decide qué pantalla mostrar; el caso por defecto compone las secciones de la portada.
   const renderPage = () => {
     switch (activePage) {
@@ -233,12 +284,36 @@ function App() {
       case 'rutas':
         return <RutasLegales />
       case 'admin':
-        return <Admin />
-      // Estas funciones flecha cambian entre las vistas de acceso y registro.
+        if (isCheckingAdminSession) {
+          return <main className="admin-session-loading" role="status">Verificando sesión administrativa…</main>
+        }
+        return isAdminAuthenticated
+          ? <Admin onLogout={handleAdminLogout} />
+          : <LoginAdmin
+              onBack={navigateHome}
+              onSignup={() => navigateToPage('signup-admin')}
+              onAuthenticated={completeAdminAuthentication}
+              initialError={adminSessionError}
+            />
+      // Enlaza los formularios de acceso y registro con la navegación y la sesión global.
       case 'login-admin':
-        return <LoginAdmin onBack={navigateHome} onSignup={() => navigateToPage('signup-admin')} />
+        return (
+          <LoginAdmin
+            onBack={navigateHome}
+            onSignup={() => navigateToPage('signup-admin')}
+            onAuthenticated={completeAdminAuthentication}
+            initialError={adminSessionError}
+          />
+        )
       case 'signup-admin':
-        return <SingUpAdmin onBack={navigateHome} onLogin={() => navigateToPage('login-admin')} />
+        return (
+          <SingUpAdmin
+            onBack={navigateHome}
+            onLogin={() => navigateToPage('login-admin')}
+            onAuthenticated={completeAdminAuthentication}
+            initialError={adminSessionError}
+          />
+        )
       case 'socios':
         return <Socios />
       case 'ia':
@@ -405,6 +480,7 @@ function App() {
               </div>
             </section>
 
+            {/* Guía visual con pasos introductorios para reconocer situaciones de riesgo. */}
             <section id="proceso" className="process-section">
               <div className="container">
                 <h2>Herramientas para entender</h2>
@@ -434,6 +510,7 @@ function App() {
               </div>
             </section>
 
+            {/* Imagen demostrativa que ilustra niveles de conductas de violencia. */}
             <section className="violentometro-section" aria-label="Violentómetro demostrativo">
               <div className="container">
                 <img
@@ -444,7 +521,7 @@ function App() {
               </div>
             </section>
 
-            {/* Indicadores, consulta de reportes y formulario de contacto. */}
+            {/* Indicadores ilustrativos sobre los servicios y su alcance. */}
             <section className="skills-section">
               <div className="container">
                 <h2>Impacto y Alcance de Nebula</h2>
@@ -469,6 +546,7 @@ function App() {
                 </div>
               </div>
             </section>
+            {/* Accesos a los formularios demostrativos de crear y consultar reportes. */}
             <section className="report-lookup-section" aria-labelledby="report-lookup-title">
               <div className="container report-lookup-grid">
                 <article className="report-lookup-card">
@@ -502,6 +580,7 @@ function App() {
                 </article>
               </div>
             </section>
+            {/* Formulario de contacto visual y datos institucionales mostrados en portada. */}
             <section id="contacto" className="cta-contact-section">
               <div className="container">
                 <h2>¿Necesitas Orientación?</h2>

@@ -1,5 +1,6 @@
 import { useEffect } from 'react'
 
+// Modal de consulta por folio; el formulario aún no consulta una API.
 function ConsultaReporteModal({ onClose }) {
   // Mantiene el foco visual en la consulta, restaura el scroll y permite cerrar con Escape.
   useEffect(() => {

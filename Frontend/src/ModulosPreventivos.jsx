@@ -21,6 +21,7 @@ const modulos = [
 function ModulosPreventivos() {
   return (
     <div className="page-shell">
+      {/* Introduce el contenido preventivo y el objetivo de los recursos. */}
       <section className="page-header compact-hero">
         <div className="container">
           <span className="eyebrow">Módulos preventivos</span>

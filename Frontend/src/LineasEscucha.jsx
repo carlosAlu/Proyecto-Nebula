@@ -24,6 +24,7 @@ const info = [
 function LineaEscucha() {
   return (
     <div className="page-shell">
+      {/* Explica el propósito de la sección antes de mostrar los canales. */}
       <section className="page-header compact-hero">
         <div className="container">
           <span className="eyebrow">Línea de escucha</span>

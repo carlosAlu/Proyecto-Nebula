@@ -1,4 +1,5 @@
-﻿import defaultImage from './assets/ImagenDefault.jpg'
+// Imagen local utilizada cuando una fotografía remota de un centro no está disponible.
+import defaultImage from './assets/ImagenDefault.jpg'
 
 // Lista de organizaciones y centros de apoyo aliados para orientación y atención.
 const centros = [
@@ -48,6 +49,7 @@ const centros = [
 function CentrosAyuda() {
   return (
     <div className="page-shell">
+      {/* Presentación de la sección y alcance general de los recursos listados. */}
       <section className="page-header compact-hero">
         <div className="container">
           <span className="eyebrow">Centros de ayuda</span>
@@ -58,7 +60,7 @@ function CentrosAyuda() {
         </div>
       </section>
 
-{/* Mapa incrustado para ubicar visualmente la red de apoyo. */}
+      {/* Mapa incrustado para ubicar visualmente la red de apoyo. */}
 <section className="page-section map-section">
         <div className="container">
           <div className="map-wrapper">
