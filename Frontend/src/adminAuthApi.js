@@ -1,5 +1,5 @@
-// URL de la API configurable para despliegues distintos al entorno local.
-const API_URL = (import.meta.env.VITE_API_URL || 'http://localhost:3000').replace(/\/$/, '')
+import { API_URL } from './apiUrl.js'
+
 const AUTH_URL = `${API_URL}/api/auth`
 
 // Ejecuta solicitudes autenticadas con cookie y convierte respuestas de error en excepciones.

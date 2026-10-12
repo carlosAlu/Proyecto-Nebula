@@ -29,9 +29,10 @@ Las secciones informativas, el cuestionario y el asistente están disponibles de
 - **Autoevaluación:** diálogo con los 15 reactivos del mapeo, ponderados por nivel (Advertencia, Reacción y Peligro). Las respuestas positivas priorizan reactivos relacionados; el resultado conserva las conductas identificadas y muestra una puntuación normalizada orientativa.
 - **Líneas de escucha:** información de orientación y canales de atención.
 - **Centros de ayuda:** directorio y mapa de recursos de apoyo.
-- **Módulos preventivos:** materiales y herramientas de prevención.
+- **Chat global:** conversación anónima en tiempo real con mensajes temporales.
 - **Rutas legales:** información general sobre derechos y opciones de acompañamiento.
 - **Asistente virtual:** chat en español conectado a un workflow de n8n.
+- **Chat global anónimo:** sala pública en tiempo real, con alias aleatorio temporal y mensajes guardados en MongoDB por un máximo de 24 horas.
 - **Socios:** presentación de organizaciones colaboradoras.
 - **Administración:** registro limitado a correos autorizados por el backend, inicio de sesión contra MongoDB, validación de sesión al abrir el panel y cierre de sesión. Las contraseñas se almacenan con hash bcrypt y la sesión se conserva en una cookie `HttpOnly`.
 - **Panel administrativo:** tarjetas de demostración para gestionar recursos, revisar solicitudes y consultar la red de colaboradores. Las operaciones de estas tarjetas aún no están conectadas a datos.
@@ -76,18 +77,27 @@ npm install
 npm start
 ```
 
-La API escucha en el puerto `3000` por defecto (se puede cambiar con `PORT`). `GET /health` informa el estado del servidor y MongoDB. Si MongoDB no está configurado o disponible, el servidor sigue iniciando, pero `/health` responde con estado `503` y `"status": "degraded"`. Configura `MONGODB_URI` para conectar MongoDB Atlas; también se acepta `MONGO_URI` por compatibilidad. Si Atlas no conecta, revisa que el clúster esté activo, que las credenciales de base de datos sean correctas y que la IP pública de salida de la máquina donde corre la API esté permitida en **Atlas → Security → Network Access**.
+La API escucha en el puerto `3000` por defecto (se puede cambiar con `PORT`) y queda disponible en las interfaces de red del equipo. `GET /health` informa el estado del servidor y MongoDB. Si MongoDB no está configurado o disponible, el servidor sigue iniciando, pero `/health` responde con estado `503` y `"status": "degraded"`. Configura `MONGODB_URI` para conectar MongoDB Atlas; también se acepta `MONGO_URI` por compatibilidad. Si Atlas no conecta, revisa que el clúster esté activo, que las credenciales de base de datos sean correctas y que la IP pública de salida de la máquina donde corre la API esté permitida en **Atlas → Security → Network Access**.
 
 Para habilitar el acceso administrativo, configura en `Backend/.env`:
 
 - `JWT_SECRET`: una clave aleatoria de al menos 32 caracteres; no la compartas ni la incluyas en el frontend.
 - `ADMIN_EMAILS`: lista separada por comas de los correos autorizados para crear cuentas administrativas.
-- `FRONTEND_URL`: origen exacto del frontend. Usa `http://localhost:5173` con Vite, `http://localhost:8080` con el Docker Compose actual o el dominio del frontend en producción.
+- `FRONTEND_URL`: orígenes adicionales autorizados, separados por comas. Los orígenes locales (`localhost`) y las direcciones IPv4 privadas de la LAN en los puertos `5173` y `8080` se autorizan automáticamente para facilitar las pruebas en la red local. En producción, indica aquí el origen exacto del sitio.
 - En producción, configura `NODE_ENV=production`, sirve el sitio mediante HTTPS y usa dominios del mismo sitio para frontend y API, de modo que el navegador envíe la cookie `Secure` con `SameSite=Lax`.
 
 Puedes generar `JWT_SECRET` desde `Backend/` con `node -e "console.log(require('crypto').randomBytes(48).toString('base64url'))"` y copiar el resultado directamente a `Backend/.env`.
 
-El frontend usa `http://localhost:3000` para la API de forma predeterminada. Si la API está en otra dirección, configura `VITE_API_URL` en el entorno del frontend antes de ejecutar Vite o compilar la aplicación. La API permite por defecto solicitudes con credenciales desde `http://localhost:5173`; ajusta `FRONTEND_URL` al origen real del frontend.
+El frontend usa automáticamente el mismo nombre de host desde el que se abrió la página para llamar a la API por el puerto `3000`. Para desarrollo, Vite escucha en todas las interfaces y la API autoriza orígenes IPv4 privados de la LAN en los puertos `5173` y `8080`. `VITE_API_URL` es opcional y solo debe configurarse si la API está en un host distinto.
+
+### Acceso desde otras computadoras de la red local
+
+1. Inicia el frontend con `npm.cmd --prefix Frontend run dev` y la API con `npm.cmd --prefix Backend start` en la computadora que actuará como servidor.
+2. Averigua su dirección IPv4 local ejecutando `ipconfig` en PowerShell.
+3. Desde otra computadora conectada a la misma red, abre `http://<IP-LOCAL-DEL-SERVIDOR>:5173` (por ejemplo, `http://192.168.1.25:5173`).
+4. Si no carga, permite los puertos TCP `5173` y `3000` en el Firewall de Windows para redes privadas. El frontend usará automáticamente esa misma IP para autenticación y chat.
+
+El acceso descrito es solo para la red local; no publiques esos puertos en el router para exponer el sistema a Internet.
 
 ### API de autenticación administrativa
 
@@ -132,8 +142,8 @@ npm run build
 ├── Backend/
 │   ├── controllers/           # Lógica de autenticación administrativa
 │   ├── middleware/            # Validación de sesión y rol administrativo
-│   ├── models/                # Modelo de cuentas administrativas
-│   ├── routes/                 # Rutas de autenticación
+│   ├── models/                # Modelos de cuentas y mensajes del chat
+│   ├── routes/                 # Rutas de autenticación y chat global
 │   ├── server.js               # API, CORS, MongoDB y health check
 │   └── package.json            # Dependencias del backend
 ├── Frontend/
@@ -170,6 +180,12 @@ La carga del chat requiere conexión a Internet y disponibilidad de jsDelivr y d
 ### MongoDB
 
 La API se conecta a MongoDB mediante `MONGODB_URI` (o `MONGO_URI`) del archivo `Backend/.env`. `docker-compose.yml` construye el backend y el frontend, y proporciona el archivo de entorno del backend al contenedor. La disponibilidad de la API no garantiza que Atlas sea accesible: configura la lista de acceso de red de Atlas para el entorno desde donde se ejecuta el backend.
+
+### Chat global anónimo
+
+El chat global no requiere cuenta, correo ni nombre real. El navegador genera un alias aleatorio y lo conserva en `sessionStorage` durante esa sesión; el backend almacena únicamente el alias, el texto y las fechas de cada mensaje, sin crear perfiles ni asociar un identificador de usuaria. Los mensajes se actualizan en vivo mediante Server-Sent Events y MongoDB los elimina con un índice TTL al cumplir 24 horas. La eliminación TTL de MongoDB es automática, aunque el proceso de limpieza puede tardar un poco más de 24 horas; los mensajes vencidos no se entregan en el chat. Como medida antiabuso, el límite de 10 mensajes por minuto mantiene un contador temporal por IP en la memoria del proceso (no en MongoDB); los registros que mantenga el proveedor de alojamiento quedan fuera de la aplicación.
+
+Para probarlo, inicia MongoDB/API y el frontend, y configura `VITE_API_URL` si la API no está en `http://localhost:3000`. La opción de tema privado o anónimo no evita que una usuaria incluya información personal voluntariamente en un mensaje; la interfaz recomienda no compartirla.
 
 Con Docker Compose instalado y `Backend/.env` configurado, los servicios se pueden iniciar y detener desde la raíz del repositorio:
 

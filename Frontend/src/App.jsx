@@ -3,7 +3,7 @@ import { getAdminSession, logoutAdmin } from './adminAuthApi.js'
 import './App.css'
 import LineaEscucha from './LineasEscucha.jsx'
 import CentrosAyuda from './CentrosAyuda.jsx'
-import ModulosPreventivos from './ModulosPreventivos.jsx'
+import ModulosPreventivos from './ChatGlogal.jsx'
 import RutasLegales from './RutasLegales.jsx'
 import Admin from './Admin.jsx'
 import LoginAdmin from './LoginAdmin.jsx'
@@ -34,8 +34,8 @@ const quickActions = [
     page: 'centros',
   },
   {
-    title: 'Modulos Preventivos',
-    description: 'Accede a recursos de contención y acompañamiento.',
+    title: 'Chat global de acompañamiento',
+    description: 'Accede a un espacio privado y seguro para conversar.',
     icon: '💬',
     page: 'modulos',
   },

@@ -8,11 +8,50 @@ dotenv.config({ path: path.join(__dirname, ".env") });
 
 // Construye la aplicación Express y limita el origen autorizado para peticiones con cookies.
 const authRoutes = require("./routes/authRoutes");
+const chatRoutes = require("./routes/chatRoutes");
 const app = express();
 app.disable("x-powered-by");
-const frontendOrigin = process.env.FRONTEND_URL || "http://localhost:5173";
+
+function isPrivateLanOrigin(origin) {
+    let parsedOrigin;
+    try {
+        parsedOrigin = new URL(origin);
+    } catch {
+        return false;
+    }
+
+    if (parsedOrigin.protocol !== "http:" || !["5173", "8080"].includes(parsedOrigin.port)) {
+        return false;
+    }
+
+    const octets = parsedOrigin.hostname.split(".").map(Number);
+    if (octets.length !== 4 || octets.some((octet) => !Number.isInteger(octet) || octet < 0 || octet > 255)) {
+        return false;
+    }
+
+    return octets[0] === 10
+        || (octets[0] === 172 && octets[1] >= 16 && octets[1] <= 31)
+        || (octets[0] === 192 && octets[1] === 168);
+}
+
+const frontendOrigins = (process.env.FRONTEND_URL || "")
+    .split(",")
+    .map((origin) => origin.trim())
+    .filter(Boolean);
 app.use(cors({
-    origin: frontendOrigin,
+    origin(origin, callback) {
+        const isConfiguredOrigin = frontendOrigins.includes(origin);
+        const isLocalDevelopmentOrigin = origin === "http://localhost:5173"
+            || origin === "http://localhost:8080"
+            || origin === "http://127.0.0.1:5173"
+            || origin === "http://127.0.0.1:8080";
+
+        if (!origin || isConfiguredOrigin || isLocalDevelopmentOrigin || isPrivateLanOrigin(origin)) {
+            return callback(null, true);
+        }
+
+        return callback(null, false);
+    },
     credentials: true
 }));
 app.use(express.json());
@@ -49,6 +88,7 @@ app.get("/health", (_req, res) => {
 
 // Monta los endpoints de autenticación bajo un prefijo común.
 app.use("/api/auth", authRoutes);
+app.use("/api/chat", chatRoutes);
 
 // Responde con un error consistente cuando no existe una ruta solicitada.
 app.use((_req, res) => {
