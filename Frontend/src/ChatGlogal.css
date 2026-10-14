@@ -757,6 +757,10 @@
   color: #b6a6bd;
 }
 
+:root[data-theme='dark'] .gc-form-notice {
+  color: #ffb3bf;
+}
+
 :root[data-theme='dark'] .gc-demo-notice strong,
 :root[data-theme='dark'] .gc-welcome strong,
 :root[data-theme='dark'] .gc-guideline-list li > span {

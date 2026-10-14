@@ -9,6 +9,13 @@ dotenv.config({ path: path.join(__dirname, ".env") });
 // Construye la aplicación Express y limita el origen autorizado para peticiones con cookies.
 const authRoutes = require("./routes/authRoutes");
 const chatRoutes = require("./routes/chatRoutes");
+const orientationResourceRoutes = require("./routes/orientationResourceRoutes");
+const orientationRequestRoutes = require("./routes/orientationRequestRoutes");
+const partnerRoutes = require("./routes/partnerRoutes");
+const OrientationResource = require("./models/OrientationResource");
+const Partner = require("./models/Partner");
+const defaultOrientationResources = require("./data/defaultOrientationResources");
+const defaultPartners = require("./data/defaultPartners");
 const app = express();
 app.disable("x-powered-by");
 
@@ -89,6 +96,12 @@ app.get("/health", (_req, res) => {
 // Monta los endpoints de autenticación bajo un prefijo común.
 app.use("/api/auth", authRoutes);
 app.use("/api/chat", chatRoutes);
+app.use("/api/resources", orientationResourceRoutes);
+app.use("/api/auth/resources", orientationResourceRoutes);
+app.use("/api/orientation-requests", orientationRequestRoutes);
+app.use("/api/auth/orientation-requests", orientationRequestRoutes);
+app.use("/api/partners", partnerRoutes);
+app.use("/api/auth/partners", partnerRoutes);
 
 // Responde con un error consistente cuando no existe una ruta solicitada.
 app.use((_req, res) => {
@@ -106,6 +119,31 @@ async function connectDatabase() {
     try {
         await mongoose.connect(uri, { serverSelectionTimeoutMS: 5000 });
         console.log("MongoDB conectado.");
+        const appMetadata = mongoose.connection.collection("appMetadata");
+        const initialization = await appMetadata.findOne({ _id: "orientation-resources-v1" });
+        if (!initialization) {
+            const resourcesCount = await OrientationResource.estimatedDocumentCount();
+            if (resourcesCount === 0) {
+                await OrientationResource.insertMany(defaultOrientationResources);
+                console.log("Recursos de orientación iniciales guardados en MongoDB.");
+            }
+            await appMetadata.insertOne({
+                _id: "orientation-resources-v1",
+                initializedAt: new Date()
+            });
+        }
+        const partnerInitialization = await appMetadata.findOne({ _id: "partners-v1" });
+        if (!partnerInitialization) {
+            const partnersCount = await Partner.estimatedDocumentCount();
+            if (partnersCount === 0) {
+                await Partner.insertMany(defaultPartners);
+                console.log("Red de colaboradores inicial guardada en MongoDB.");
+            }
+            await appMetadata.insertOne({
+                _id: "partners-v1",
+                initializedAt: new Date()
+            });
+        }
     } catch (error) {
         console.error("No se pudo conectar a MongoDB:", error.message);
     }

@@ -4,7 +4,7 @@ import './App.css'
 import LineaEscucha from './LineasEscucha.jsx'
 import CentrosAyuda from './CentrosAyuda.jsx'
 import ModulosPreventivos from './ChatGlogal.jsx'
-import RutasLegales from './RutasLegales.jsx'
+import RutasLegales from './RecursosOrientacion.jsx'
 import Admin from './Admin.jsx'
 import LoginAdmin from './LoginAdmin.jsx'
 import SingUpAdmin from './SingUpAdmin.jsx'
@@ -13,20 +13,14 @@ import IA from './IA.jsx'
 import Autoevaluacion from './Autoevaluacion.jsx'
 import ReporteModal from './ReporteModal.jsx'
 import ConsultaReporteModal from './ConsultaReporteModal.jsx'
+import { createOrientationRequest } from './orientationRequestsApi.js'
 import logo from './assets/Logo.png'
 import miImagen from './assets/Circ_AI.png'
 import miImagenParpadeo from './assets/Circ_Ai_Parpadeo.png'
-import violentometroImage from './assets/ViolentometroDemostrativo.png'
 
 // Configuración de accesos directos que se muestran en la portada.
 // Acciones rápidas que aparecen en la home y llevan a cada sección principal de la app.
 const quickActions = [
-  {
-    title: 'Linea de escucha',
-    description: 'Consulta información sobre tus derechos y opciones.',
-    icon: '⚖️',
-    page: 'linea',
-  },
   {
     title: 'Centros de ayuda',
     description: 'Encuentra instituciones y refugios cercanos.',
@@ -40,8 +34,8 @@ const quickActions = [
     page: 'modulos',
   },
   {
-    title: 'Rutas legales',
-    description: 'Conoce señales de alerta y rutas de apoyo.',
+    title: 'Recursos de orientación',
+    description: 'Accede a información confiable, multimedia y contactos profesionales.',
     icon: '📚',
     page: 'rutas',
   },
@@ -76,6 +70,164 @@ const aiMessages = [
   '¿Te gustaría platicar? Haz clic aquí para comenzar.',
 ]
 
+const violentometroLevels = [
+  {
+    id: 'advertencia',
+    label: 'Advertencia',
+    marker: '01',
+    color: '#d39a00',
+    tint: '#fff7dd',
+    summary: 'Señales que pueden parecer pequeñas, pero afectan tu bienestar.',
+    conductTitle: 'Señales para reconocer',
+    conducts: [
+      'Bromas hirientes o comentarios que te ridiculizan',
+      'Celos y desconfianza constantes',
+      'Chantajes o manipulación para que hagas algo',
+      'Ignorarte, menospreciarte o descalificarte',
+      'Intentar controlar tus amistades, decisiones o redes',
+    ],
+    recommendationTitle: 'Pon atención a lo que sientes',
+    recommendations: [
+      'Reconoce cómo te hacen sentir estas conductas; no tienes que minimizarlas.',
+      'Si te resulta seguro, conversa sobre tus límites con alguien de confianza.',
+      'Busca información y orientación antes de que la situación te rebase.',
+    ],
+  },
+  {
+    id: 'reaccion',
+    label: 'Reacción',
+    marker: '02',
+    color: '#e66b27',
+    tint: '#fff0e8',
+    summary: 'Conductas que ya pueden limitar tu libertad y seguridad.',
+    conductTitle: 'Conductas que requieren apoyo',
+    conducts: [
+      'Humillarte, intimidarte o amenazarte',
+      'Aislarte de tus amistades o familia',
+      'Controlar tu dinero, tus actividades o tu teléfono',
+      'Empujarte, golpearte o forzarte a hacer algo',
+      'Usar el miedo o la presión para tener el control',
+    ],
+    recommendationTitle: 'Acércate a una red de apoyo',
+    recommendations: [
+      'Cuéntale a una persona de confianza lo que está ocurriendo.',
+      'Contacta un servicio especializado para conocer opciones seguras.',
+      'Si puedes hacerlo sin ponerte en riesgo, acuerda una palabra clave o un plan para pedir ayuda.',
+    ],
+  },
+  {
+    id: 'peligro',
+    label: 'Peligro',
+    marker: '03',
+    color: '#c52d50',
+    tint: '#ffedf1',
+    summary: 'Situaciones graves que pueden poner en riesgo tu integridad o tu vida.',
+    conductTitle: 'Señales de riesgo inmediato',
+    conducts: [
+      'Amenazas graves de hacerte daño',
+      'Agresión sexual o lesiones graves',
+      'Uso de armas u objetos para amenazarte',
+      'Impedirte salir o buscar ayuda mediante la fuerza',
+      'Amenazas de muerte o riesgo de que la violencia escale',
+    ],
+    recommendationTitle: 'Prioriza tu seguridad ahora',
+    recommendations: [
+      'Si estás en peligro inmediato en México, llama al 911 o busca un lugar seguro.',
+      'No enfrentes a quien te agrede si eso puede aumentar el riesgo.',
+      'Contacta a una persona de confianza y pide apoyo especializado para planear los siguientes pasos.',
+    ],
+  },
+]
+
+function Violentometro({ onNavigateToPage }) {
+  const [activeLevelId, setActiveLevelId] = useState('advertencia')
+  const activeLevel = violentometroLevels.find((level) => level.id === activeLevelId)
+
+  return (
+    <section className="violentometro-section" aria-labelledby="violentometro-title">
+      <div className="container">
+        <div className="violentometro-heading">
+          <span className="violentometro-kicker">Una guía para reconocer señales</span>
+          <h2 id="violentometro-title">Violentómetro interactivo</h2>
+          <p>
+            Elige un nivel para conocer ejemplos de conductas y recomendaciones de apoyo.
+            Ninguna forma de violencia es tu culpa.
+          </p>
+        </div>
+
+        <div className="violentometro-levels" aria-label="Selecciona un nivel del violentómetro">
+          {violentometroLevels.map((level) => (
+            <button
+              className={`violentometro-level${activeLevelId === level.id ? ' is-active' : ''}`}
+              key={level.id}
+              type="button"
+              style={{ '--level-color': level.color, '--level-tint': level.tint }}
+              aria-pressed={activeLevelId === level.id}
+              aria-controls="violentometro-details"
+              onClick={() => setActiveLevelId(level.id)}
+            >
+              <span className="violentometro-level-top">
+                <span className="violentometro-marker">{level.marker}</span>
+                <span className="violentometro-level-label">{level.label}</span>
+                <span className="violentometro-chevron" aria-hidden="true">↗</span>
+              </span>
+              <span className="violentometro-level-summary">{level.summary}</span>
+            </button>
+          ))}
+        </div>
+
+        <div
+          className="violentometro-details"
+          id="violentometro-details"
+          style={{ '--level-color': activeLevel.color, '--level-tint': activeLevel.tint }}
+          aria-live="polite"
+        >
+          <div className="violentometro-details-heading">
+            <span className="violentometro-level-tag">
+              <span aria-hidden="true" />
+              Nivel {activeLevel.marker} · {activeLevel.label}
+            </span>
+            <p>{activeLevel.summary}</p>
+          </div>
+
+          <div className="violentometro-details-grid">
+            <div className="violentometro-conducts">
+              <h3>{activeLevel.conductTitle}</h3>
+              <ul>
+                {activeLevel.conducts.map((conduct) => (
+                  <li key={conduct}>{conduct}</li>
+                ))}
+              </ul>
+            </div>
+            <aside className="violentometro-recommendation">
+              <span className="violentometro-recommendation-icon" aria-hidden="true">✳</span>
+              <h3>{activeLevel.recommendationTitle}</h3>
+              <ul>
+                {activeLevel.recommendations.map((recommendation) => (
+                  <li key={recommendation}>{recommendation}</li>
+                ))}
+              </ul>
+              <div className="violentometro-actions">
+                <button type="button" onClick={() => onNavigateToPage('linea')}>
+                  Hablar con alguien
+                </button>
+                <button type="button" onClick={() => onNavigateToPage('centros')}>
+                  Ver centros de ayuda
+                </button>
+              </div>
+            </aside>
+          </div>
+
+          <p className="violentometro-note">
+            Esta guía es informativa y no sustituye una valoración profesional. La violencia
+            puede presentarse de distintas maneras; puedes pedir apoyo en cualquier momento.
+          </p>
+        </div>
+      </div>
+    </section>
+  )
+}
+
 // Interpreta el fragmento de URL para recuperar la pantalla o sección activa.
 function getRouteFromHash() {
   const fragment = window.location.hash.slice(1)
@@ -105,6 +257,10 @@ function App() {
   const [isReportModalOpen, setIsReportModalOpen] = useState(false)
   const [isReportLookupOpen, setIsReportLookupOpen] = useState(false)
   const [isAssessmentModalOpen, setIsAssessmentModalOpen] = useState(false)
+  const [isSendingOrientationRequest, setIsSendingOrientationRequest] = useState(false)
+  const [orientationPhone, setOrientationPhone] = useState('')
+  const [orientationRequestError, setOrientationRequestError] = useState('')
+  const [orientationRequestNotice, setOrientationRequestNotice] = useState('')
   const [isAdminAuthenticated, setIsAdminAuthenticated] = useState(false)
   const [isCheckingAdminSession, setIsCheckingAdminSession] = useState(
     () => getRouteFromHash().page === 'admin',
@@ -256,6 +412,31 @@ function App() {
   }
 
   const openAssessment = () => setIsAssessmentModalOpen(true)
+
+  const handleOrientationRequestSubmit = async (event) => {
+    event.preventDefault()
+    const form = event.currentTarget
+    const formData = new FormData(form)
+    setIsSendingOrientationRequest(true)
+    setOrientationRequestError('')
+    setOrientationRequestNotice('')
+
+    try {
+      await createOrientationRequest({
+        name: formData.get('name'),
+        email: formData.get('email'),
+        phone: formData.get('phone'),
+        message: formData.get('message'),
+      })
+      form.reset()
+      setOrientationPhone('')
+      setOrientationRequestNotice('Tu mensaje se envió correctamente. Nos pondremos en contacto contigo.')
+    } catch (error) {
+      setOrientationRequestError(error.message)
+    } finally {
+      setIsSendingOrientationRequest(false)
+    }
+  }
 
   // Completa el inicio de sesión tras una respuesta exitosa del servidor.
   const completeAdminAuthentication = () => {
@@ -424,7 +605,6 @@ function App() {
                     centros de atención psicológica y jurídica, y una comunidad informada que promueve el
                     respeto y la equidad.
                   </p>
-                  <a href="#servicios" className="btn-primary" onClick={(e) => { e.preventDefault(); navigateToSection('servicios') }}>Explorar Servicios</a>
                 </div>
 
                 <div className="about-stats-graphic">
@@ -483,7 +663,7 @@ function App() {
             {/* Guía visual con pasos introductorios para reconocer situaciones de riesgo. */}
             <section id="proceso" className="process-section">
               <div className="container">
-                <h2>Herramientas para entender</h2>
+                <h2>Razones de alerta</h2>
                 <p className="section-subtitle">Conoce las señales de alerta y cómo identificar situaciones de riesgo.</p>
                 <div className="process-steps">
                   <div className="step-item">
@@ -510,16 +690,7 @@ function App() {
               </div>
             </section>
 
-            {/* Imagen demostrativa que ilustra niveles de conductas de violencia. */}
-            <section className="violentometro-section" aria-label="Violentómetro demostrativo">
-              <div className="container">
-                <img
-                  className="violentometro-image"
-                  src={violentometroImage}
-                  alt="Violentómetro: ejemplos de conductas de alerta, violencia y peligro, organizados por nivel de riesgo."
-                />
-              </div>
-            </section>
+            <Violentometro onNavigateToPage={navigateToPage} />
 
             {/* Indicadores ilustrativos sobre los servicios y su alcance. */}
             <section className="skills-section">
@@ -589,14 +760,49 @@ function App() {
                   iniciativa comunitaria.
                 </p>
 
-                <form className="contact-form">
+                <form className="contact-form" onSubmit={handleOrientationRequestSubmit}>
                   <div className="form-group">
-                    <input type="text" placeholder="Tu Nombre o Alias (Opcional)" required />
-                    <input type="email" placeholder="Correo electrónico de contacto" required />
-                    <input type="tel" placeholder="Teléfono (Opcional)" />
+                    <input
+                      type="text"
+                      name="name"
+                      placeholder="Tu Nombre o Alias (Opcional)"
+                      aria-label="Tu nombre o alias (opcional)"
+                      maxLength="120"
+                    />
+                    <input
+                      type="email"
+                      name="email"
+                      placeholder="Correo electrónico de contacto"
+                      aria-label="Correo electrónico de contacto"
+                      maxLength="254"
+                      required
+                    />
+                    <input
+                      type="tel"
+                      name="phone"
+                      placeholder="Teléfono (Opcional)"
+                      aria-label="Teléfono (opcional)"
+                      inputMode="numeric"
+                      pattern="[0-9]{10}"
+                      title="Ingresa exactamente 10 dígitos numéricos."
+                      maxLength="10"
+                      value={orientationPhone}
+                      onChange={(event) => setOrientationPhone(event.target.value.replace(/\D/g, '').slice(0, 10))}
+                    />
                   </div>
-                  <textarea placeholder="Cuéntanos cómo podemos ayudarte o qué información necesitas..." rows="4" required />
-                  <button type="submit" className="btn-primary">Enviar Mensaje</button>
+                  <textarea
+                    name="message"
+                    placeholder="Cuéntanos cómo podemos ayudarte o qué información necesitas..."
+                    aria-label="Mensaje"
+                    rows="4"
+                    maxLength="3000"
+                    required
+                  />
+                  {orientationRequestError && <p className="contact-form-message is-error" role="alert">{orientationRequestError}</p>}
+                  {orientationRequestNotice && <p className="contact-form-message is-success" role="status">{orientationRequestNotice}</p>}
+                  <button type="submit" className="btn-primary" disabled={isSendingOrientationRequest}>
+                    {isSendingOrientationRequest ? 'Enviando…' : 'Enviar Mensaje'}
+                  </button>
                 </form>
               </div>
             </section>
@@ -721,7 +927,7 @@ function App() {
             {/* Estos controladores abren directamente cada pantalla de recursos. */}
             <ul>
               <li><a href="#centros" onClick={(e) => { e.preventDefault(); navigateToPage('centros') }}>Centros de Atención</a></li>
-              <li><a href="#rutas" onClick={(e) => { e.preventDefault(); navigateToPage('rutas') }}>Rutas de Acción</a></li>
+              <li><a href="#rutas" onClick={(e) => { e.preventDefault(); navigateToPage('rutas') }}>Recursos de orientacion</a></li>
               <li><a href="#linea" onClick={(e) => { e.preventDefault(); navigateToPage('linea') }}>Líneas de Emergencia</a></li>
             </ul>
           </div>

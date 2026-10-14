@@ -66,7 +66,7 @@ function ChatGlobal() {
   const [notice, setNotice] = useState('')
   const [connectionStatus, setConnectionStatus] = useState('connecting')
   const [isSending, setIsSending] = useState(false)
-  const latestMessageRef = useRef(null)
+  const messageListRef = useRef(null)
 
   useEffect(() => {
     const stream = new EventSource(`${chatUrl}/stream`)
@@ -96,7 +96,8 @@ function ChatGlobal() {
   }, [])
 
   useEffect(() => {
-    latestMessageRef.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' })
+    const messageList = messageListRef.current
+    messageList?.scrollTo({ top: messageList.scrollHeight, behavior: 'smooth' })
   }, [messages])
 
   useEffect(() => {
@@ -196,7 +197,12 @@ function ChatGlobal() {
               </p>
             </div>
 
-            <div className="gc-message-list" aria-live="polite" aria-label="Mensajes del chat global">
+            <div
+              className="gc-message-list"
+              aria-live="polite"
+              aria-label="Mensajes del chat global"
+              ref={messageListRef}
+            >
               <div className="gc-day-divider"><span>Conversación reciente · 24 horas</span></div>
               <div className="gc-welcome">
                 <span className="gc-welcome-icon" aria-hidden="true">☀</span>
@@ -243,7 +249,6 @@ function ChatGlobal() {
                   </article>
                 )
               })}
-              <div ref={latestMessageRef} />
             </div>
 
             <form className="gc-composer" onSubmit={sendMessage}>

@@ -33,9 +33,9 @@ Las secciones informativas, el cuestionario y el asistente están disponibles de
 - **Rutas legales:** información general sobre derechos y opciones de acompañamiento.
 - **Asistente virtual:** chat en español conectado a un workflow de n8n.
 - **Chat global anónimo:** sala pública en tiempo real, con alias aleatorio temporal y mensajes guardados en MongoDB por un máximo de 24 horas.
-- **Socios:** presentación de organizaciones colaboradoras.
+- **Socios:** directorio público de organizaciones colaboradoras, agrupado por tipo y persistido en MongoDB; el panel administrativo permite agregar colaboradores y eliminarlos.
 - **Administración:** registro limitado a correos autorizados por el backend, inicio de sesión contra MongoDB, validación de sesión al abrir el panel y cierre de sesión. Las contraseñas se almacenan con hash bcrypt y la sesión se conserva en una cookie `HttpOnly`.
-- **Panel administrativo:** tarjetas de demostración para gestionar recursos, revisar solicitudes y consultar la red de colaboradores. Las operaciones de estas tarjetas aún no están conectadas a datos.
+- **Panel administrativo:** gestión de recursos de orientación y colaboradores guardados en MongoDB; los administradores pueden consultar, agregar, editar y eliminar estos datos. Las demás tarjetas del panel son demostrativas.
 - **Reportes:** formularios visuales de creación de reportes anónimos y consulta por folio; todavía no se envían ni recuperan desde la API.
 - **Preferencia de tema:** alternancia entre modo claro y oscuro, guardada localmente en el navegador.
 
@@ -85,6 +85,8 @@ Para habilitar el acceso administrativo, configura en `Backend/.env`:
 - `ADMIN_EMAILS`: lista separada por comas de los correos autorizados para crear cuentas administrativas.
 - `FRONTEND_URL`: orígenes adicionales autorizados, separados por comas. Los orígenes locales (`localhost`) y las direcciones IPv4 privadas de la LAN en los puertos `5173` y `8080` se autorizan automáticamente para facilitar las pruebas en la red local. En producción, indica aquí el origen exacto del sitio.
 - En producción, configura `NODE_ENV=production`, sirve el sitio mediante HTTPS y usa dominios del mismo sitio para frontend y API, de modo que el navegador envíe la cookie `Secure` con `SameSite=Lax`.
+
+Los recursos de orientación y la red de colaboradores se inicializan en MongoDB con los datos actuales en el primer arranque que encuentra cada colección vacía. La API los ofrece públicamente en `GET /api/resources` y `GET /api/partners`; agregar, editar y eliminar elementos requiere una sesión administrativa.
 
 Puedes generar `JWT_SECRET` desde `Backend/` con `node -e "console.log(require('crypto').randomBytes(48).toString('base64url'))"` y copiar el resultado directamente a `Backend/.env`.
 
