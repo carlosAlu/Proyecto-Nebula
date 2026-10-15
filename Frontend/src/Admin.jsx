@@ -715,22 +715,21 @@ function Admin({ onLogout }) {
 				) : (
 					<div className="container info-grid">
 						{adminOptions.map((option) => (
-							<article key={option.title} className="info-card">
+							<button
+								key={option.title}
+								type="button"
+								className="info-card admin-option-card"
+								onClick={() => {
+									if (option.title === 'Gestionar recursos') openResourceManager()
+									if (option.title === 'Revisar solicitudes') openRequestManager()
+									if (option.title === 'Red de colaboradores') openPartnerManager()
+								}}
+							>
 								<div className="card-icon">{option.icon}</div>
 								<h3>{option.title}</h3>
 								<p>{option.description}</p>
-								<button
-									type="button"
-									className="card-cta"
-									onClick={() => {
-										if (option.title === 'Gestionar recursos') openResourceManager()
-										if (option.title === 'Revisar solicitudes') openRequestManager()
-										if (option.title === 'Red de colaboradores') openPartnerManager()
-									}}
-								>
-									Abrir módulo
-								</button>
-							</article>
+								<span className="card-cta">Abrir módulo</span>
+							</button>
 						))}
 					</div>
 				)}
