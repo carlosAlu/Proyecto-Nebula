@@ -2813,6 +2813,45 @@ h2 {
   cursor: pointer;
 }
 
+.report-submit-button:disabled {
+  cursor: wait;
+  opacity: 0.65;
+}
+
+.report-form-message {
+  margin: 4px 0;
+  font-size: 0.84rem;
+}
+
+.report-form-message.is-error {
+  color: #9a334c;
+}
+
+.report-status-result {
+  margin-top: 18px;
+  padding: 16px;
+  border: 1px solid #e7e1eb;
+  border-radius: 16px;
+  background: #f4f1f6;
+}
+
+.report-status-result > span {
+  color: var(--text-muted);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+.report-status-result h3 {
+  margin: 5px 0;
+  color: var(--primary-color);
+}
+
+.report-status-result p {
+  color: var(--text-muted);
+  font-size: 0.82rem;
+}
+
 .report-modal-close:focus-visible,
 .report-submit-button:focus-visible {
   outline: 3px solid rgba(113, 141, 128, 0.55);
@@ -4057,6 +4096,11 @@ h2 {
 :root[data-theme='dark'] .report-modal {
   border-color: var(--border-color);
   background: #292630;
+}
+
+:root[data-theme='dark'] .report-status-result {
+  border-color: var(--border-color);
+  background: #35313d;
 }
 
 :root[data-theme='dark'] .report-confirmation-icon {

@@ -9,6 +9,7 @@ import {
 	deleteOrientationRequest,
 	getOrientationRequests,
 } from './orientationRequestsApi.js'
+import Reportes from './Reportes.jsx'
 import { createPartner, deletePartner, getPartners, updatePartner } from './partnersApi.js'
 import './Admin.css'
 
@@ -122,6 +123,7 @@ function Admin({ onLogout }) {
 	const [isManagingResources, setIsManagingResources] = useState(false)
 	const [isManagingPartners, setIsManagingPartners] = useState(false)
 	const [isManagingRequests, setIsManagingRequests] = useState(false)
+	const [isManagingReports, setIsManagingReports] = useState(false)
 	const [resources, setResources] = useState([])
 	const [resourceForm, setResourceForm] = useState(initialResourceForm)
 	const [editingResourceId, setEditingResourceId] = useState('')
@@ -419,7 +421,9 @@ function Admin({ onLogout }) {
 				</div>
 			</section>
 			<section className="page-section">
-				{isManagingResources || isManagingPartners || isManagingRequests ? (
+				{isManagingReports ? (
+					<Reportes onBack={() => setIsManagingReports(false)} />
+				) : isManagingResources || isManagingPartners || isManagingRequests ? (
 					<div className="container admin-resource-manager">
 						<div className="admin-resource-manager-heading">
 							<div>
@@ -723,6 +727,7 @@ function Admin({ onLogout }) {
 									if (option.title === 'Gestionar recursos') openResourceManager()
 									if (option.title === 'Revisar solicitudes') openRequestManager()
 									if (option.title === 'Red de colaboradores') openPartnerManager()
+									if (option.title === 'Reportes anónimos') setIsManagingReports(true)
 								}}
 							>
 								<div className="card-icon">{option.icon}</div>

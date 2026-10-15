@@ -21,7 +21,7 @@ Nebula es una plataforma web de orientación y prevención de la violencia contr
 
 El repositorio contiene una aplicación frontend React/Vite y una API Express. La autenticación administrativa está implementada y utiliza MongoDB; requiere que Atlas sea accesible y que las variables de entorno estén configuradas. La API informa un estado degradado si la base de datos no está disponible.
 
-Las secciones informativas, el cuestionario y el asistente están disponibles desde la interfaz. Algunas funciones aún son demostrativas: el panel administrativo muestra tarjetas de módulos sin operaciones de gestión conectadas; los formularios de reportes y consulta de folios no persisten ni recuperan información. La autoevaluación es orientativa y no sustituye atención profesional. El destino del botón de salida rápida debe revisarse antes de publicar el sitio.
+Las secciones informativas, el cuestionario y el asistente están disponibles desde la interfaz. Los reportes anónimos ya se guardan en MongoDB, generan un folio para consultar su avance y pueden gestionarse desde el panel administrativo. Las métricas y otras tarjetas del panel que no tienen una vista de gestión siguen siendo demostrativas. La autoevaluación es orientativa y no sustituye atención profesional. El destino del botón de salida rápida debe revisarse antes de publicar el sitio.
 
 ## Funciones disponibles
 
@@ -34,8 +34,9 @@ Las secciones informativas, el cuestionario y el asistente están disponibles de
 - **Asistente virtual:** chat en español conectado a un workflow de n8n.
 - **Chat global anónimo:** sala pública en tiempo real, con alias aleatorio temporal y mensajes guardados en MongoDB por un máximo de 24 horas.
 - **Socios:** directorio público de organizaciones colaboradoras, agrupado por tipo y persistido en MongoDB; el panel administrativo permite agregar colaboradores y eliminarlos.
+- **Reportes anónimos:** formulario sin cuenta que guarda tipo de violencia, lugar, descripción y evidencia opcional en MongoDB; genera un folio aleatorio que permite consultar únicamente el estado y la fecha de actualización. El panel administrativo permite revisar los datos, descargar evidencia, cambiar el estado y eliminar reportes.
 - **Administración:** registro limitado a correos autorizados por el backend, inicio de sesión contra MongoDB, validación de sesión al abrir el panel y cierre de sesión. Las contraseñas se almacenan con hash bcrypt y la sesión se conserva en una cookie `HttpOnly`.
-- **Panel administrativo:** gestión de recursos de orientación y colaboradores guardados en MongoDB; los administradores pueden consultar, agregar, editar y eliminar estos datos. Las demás tarjetas del panel son demostrativas.
+- **Panel administrativo:** gestión de recursos de orientación, colaboradores, solicitudes de orientación y reportes anónimos guardados en MongoDB; los administradores pueden consultar, actualizar o eliminar los datos según el módulo. Las demás tarjetas del panel son demostrativas.
 - **Reportes:** formularios visuales de creación de reportes anónimos y consulta por folio; todavía no se envían ni recuperan desde la API.
 - **Preferencia de tema:** alternancia entre modo claro y oscuro, guardada localmente en el navegador.
 
@@ -200,20 +201,18 @@ El frontend se publica en el puerto `8080` y la API en el `3000`, según el comp
 
 ## Privacidad y seguridad
 
-- No ingreses ni compartas datos personales o información que identifique a alguien en el chat.
+- No ingreses ni compartas datos personales o información que identifique a alguien en el chat ni en los reportes anónimos.
 - El chat transmite mensajes al workflow configurado en n8n; revisa sus controles de acceso, retención de datos y avisos de privacidad antes de usarlo con personas usuarias.
 - La autoevaluación se presenta solo como una reflexión orientativa. La herramienta no sustituye una valoración profesional y su cálculo requiere revisión antes de cualquier uso clínico o institucional.
 - Las cuentas administrativas solo se pueden registrar si su correo figura en `ADMIN_EMAILS`. Usa una contraseña única y mantén `JWT_SECRET` fuera del frontend y del control de versiones.
 - La sesión administrativa expira en ocho horas y se guarda en una cookie `HttpOnly`; en producción también requiere HTTPS para activar el atributo `Secure`.
-- La autenticación protege el acceso al panel, pero las tarjetas de gestión aún son demostrativas y no implementan operaciones de datos ni permisos específicos por módulo.
-- Los formularios de reporte y consulta no tienen persistencia en backend; no los uses para recibir información sensible hasta implementar y revisar su almacenamiento y protección.
+- La autenticación protege los datos y las operaciones administrativas de los reportes. La consulta pública por folio solo devuelve el estado y la fecha de actualización; conserva el folio en un lugar seguro, porque no existe recuperación si se pierde.
+- La evidencia opcional se limita a imágenes JPG, PNG o WEBP y archivos PDF de hasta 2 MB, y solo puede descargarse desde el panel autenticado. Define y comunica una política de retención y eliminación de reportes antes de usar el sistema en producción.
 - Verifica el destino del botón de salida rápida y asegúrate de que sea apropiado y seguro para la población usuaria antes de cada despliegue.
 
 ## Próximos pasos
 
-1. Implementar operaciones y permisos para los módulos de recursos, solicitudes y colaboradores del panel.
-2. Diseñar y conectar almacenamiento seguro para reportes y consulta por folio.
-3. Añadir pruebas automatizadas para autenticación, expiración de sesión, formularios y rutas protegidas.
-4. Revisar y validar con especialistas el cuestionario, su cálculo de riesgo y los recursos de apoyo.
-5. Documentar privacidad, retención y operación del workflow de n8n.
-6. Revisar el destino de salida rápida y la configuración de seguridad antes de cada despliegue.
+1. Añadir pruebas automatizadas para autenticación, expiración de sesión, formularios y rutas protegidas.
+2. Revisar y validar con especialistas el cuestionario, su cálculo de riesgo y los recursos de apoyo.
+3. Documentar privacidad, retención y operación del workflow de n8n.
+4. Revisar el destino de salida rápida y la configuración de seguridad antes de cada despliegue.

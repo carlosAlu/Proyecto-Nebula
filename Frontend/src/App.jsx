@@ -717,7 +717,7 @@ function App() {
                 </div>
               </div>
             </section>
-            {/* Accesos a los formularios demostrativos de crear y consultar reportes. */}
+            {/* Accesos a los formularios de creación y consulta de reportes anónimos. */}
             <section className="report-lookup-section" aria-labelledby="report-lookup-title">
               <div className="container report-lookup-grid">
                 <article className="report-lookup-card">

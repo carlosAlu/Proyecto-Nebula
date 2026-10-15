@@ -11,6 +11,7 @@ const authRoutes = require("./routes/authRoutes");
 const chatRoutes = require("./routes/chatRoutes");
 const orientationResourceRoutes = require("./routes/orientationResourceRoutes");
 const orientationRequestRoutes = require("./routes/orientationRequestRoutes");
+const anonymousReportRoutes = require("./routes/anonymousReportRoutes");
 const partnerRoutes = require("./routes/partnerRoutes");
 const OrientationResource = require("./models/OrientationResource");
 const Partner = require("./models/Partner");
@@ -61,7 +62,7 @@ app.use(cors({
     },
     credentials: true
 }));
-app.use(express.json());
+app.use(express.json({ limit: "4mb" }));
 
 const databaseStates = {
     0: "disconnected",
@@ -100,6 +101,8 @@ app.use("/api/resources", orientationResourceRoutes);
 app.use("/api/auth/resources", orientationResourceRoutes);
 app.use("/api/orientation-requests", orientationRequestRoutes);
 app.use("/api/auth/orientation-requests", orientationRequestRoutes);
+app.use("/api/reports", anonymousReportRoutes);
+app.use("/api/auth/reports", anonymousReportRoutes);
 app.use("/api/partners", partnerRoutes);
 app.use("/api/auth/partners", partnerRoutes);
 

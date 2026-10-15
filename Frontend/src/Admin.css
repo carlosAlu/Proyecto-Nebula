@@ -206,6 +206,114 @@
 	font-size: 0.9rem;
 }
 
+.admin-anonymous-report-list {
+	display: grid;
+	gap: 16px;
+	list-style: none;
+}
+
+.admin-anonymous-report {
+	display: flex;
+	align-items: flex-start;
+	justify-content: space-between;
+	gap: 20px;
+	padding: 20px;
+	border: 1px solid var(--border-color);
+	border-radius: 18px;
+	background: var(--bg-white);
+	box-shadow: var(--shadow-card);
+}
+
+.admin-anonymous-report-content {
+	display: grid;
+	min-width: 0;
+	flex: 1;
+	gap: 8px;
+}
+
+.admin-anonymous-report-heading {
+	display: flex;
+	align-items: baseline;
+	justify-content: space-between;
+	gap: 14px;
+	padding-bottom: 10px;
+	border-bottom: 1px solid var(--border-color);
+}
+
+.admin-anonymous-report-heading strong {
+	color: var(--primary-color);
+	letter-spacing: 0.04em;
+}
+
+.admin-anonymous-report-heading time,
+.admin-anonymous-report-content p {
+	color: var(--text-muted);
+	font-size: 0.88rem;
+}
+
+.admin-anonymous-report-description {
+	white-space: pre-wrap;
+	overflow-wrap: anywhere;
+}
+
+.admin-anonymous-report-evidence {
+	width: fit-content;
+	padding: 0;
+	border: 0;
+	background: none;
+	color: #684081;
+	font: inherit;
+	font-size: 0.88rem;
+	text-align: left;
+	text-decoration: underline;
+	cursor: pointer;
+	overflow-wrap: anywhere;
+}
+
+.admin-anonymous-report-evidence:disabled {
+	cursor: wait;
+	opacity: 0.65;
+}
+
+.admin-anonymous-report-status {
+	display: flex;
+	align-items: center;
+	flex-wrap: wrap;
+	gap: 10px;
+	margin-top: 6px;
+	color: var(--text-main);
+	font-size: 0.88rem;
+	font-weight: 700;
+}
+
+.admin-anonymous-report-status select {
+	min-height: 38px;
+	padding: 7px 10px;
+	border: 1px solid var(--border-color);
+	border-radius: 10px;
+	background: var(--bg-white);
+	color: var(--text-main);
+	font: inherit;
+}
+
+.admin-anonymous-report-status span {
+	color: var(--text-muted);
+	font-size: 0.8rem;
+	font-weight: 400;
+}
+
+@media (max-width: 640px) {
+	.admin-anonymous-report {
+		flex-direction: column;
+	}
+
+	.admin-anonymous-report-heading {
+		align-items: flex-start;
+		flex-direction: column;
+		gap: 4px;
+	}
+}
+
 .admin-resource-form h3 {
 	margin-bottom: 18px;
 	color: var(--primary-color);
