@@ -10,5 +10,14 @@
       "framework": "vite"
     }
   },
-  "rewrites": []
+  "rewrites": [
+    {
+      "source": "/",
+      "destination": "/frontend/app.jsx"
+    },
+    {
+      "source": "/api/(.*)",
+      "destination": "/backend"
+    }
+  ]
 }
