@@ -11,6 +11,7 @@ Nebula es una plataforma web de orientación y prevención de la violencia contr
 - [Tecnologías](#tecnologías)
 - [Requisitos](#requisitos)
 - [Instalación y ejecución](#instalación-y-ejecución)
+- [API disponible](#api-disponible)
 - [Comandos del frontend](#comandos-del-frontend)
 - [Estructura del repositorio](#estructura-del-repositorio)
 - [Integraciones y configuración](#integraciones-y-configuración)
@@ -19,25 +20,23 @@ Nebula es una plataforma web de orientación y prevención de la violencia contr
 
 ## Estado actual
 
-El repositorio contiene una aplicación frontend React/Vite y una API Express. La autenticación administrativa está implementada y utiliza MongoDB; requiere que Atlas sea accesible y que las variables de entorno estén configuradas. La API informa un estado degradado si la base de datos no está disponible.
+El repositorio contiene una aplicación frontend React/Vite y una API Express. La autenticación administrativa y los módulos de reportes, solicitudes de orientación, recursos y colaboradores usan MongoDB; requieren que la base de datos sea accesible y que las variables de entorno estén configuradas. La API puede iniciar sin MongoDB, pero informa un estado degradado y las funciones que dependen de la base de datos no estarán disponibles.
 
-Las secciones informativas, el cuestionario y el asistente están disponibles desde la interfaz. Los reportes anónimos ya se guardan en MongoDB, generan un folio para consultar su avance y pueden gestionarse desde el panel administrativo. Las métricas y otras tarjetas del panel que no tienen una vista de gestión siguen siendo demostrativas. La autoevaluación es orientativa y no sustituye atención profesional. El destino del botón de salida rápida debe revisarse antes de publicar el sitio.
+Las secciones informativas, el cuestionario y el asistente están disponibles desde la interfaz. Los reportes anónimos y las solicitudes de orientación se envían a la API y se guardan en MongoDB; los reportes generan un folio para consultar su avance. El panel permite gestionar reportes, solicitudes, recursos de orientación y colaboradores. Las métricas mostradas en la portada son ilustrativas, no indicadores calculados a partir de datos reales. La autoevaluación es orientativa y no sustituye atención profesional. Revisa el destino del botón de salida rápida antes de publicar el sitio.
 
 ## Funciones disponibles
 
 - **Inicio y navegación:** portada con accesos a las secciones principales. La navegación interna utiliza fragmentos de URL, por ejemplo `#centros` o `#ia`.
-- **Autoevaluación:** diálogo con los 15 reactivos del mapeo, ponderados por nivel (Advertencia, Reacción y Peligro). Las respuestas positivas priorizan reactivos relacionados; el resultado conserva las conductas identificadas y muestra una puntuación normalizada orientativa.
-- **Líneas de escucha:** información de orientación y canales de atención.
-- **Centros de ayuda:** directorio y mapa de recursos de apoyo.
-- **Chat global:** conversación anónima en tiempo real con mensajes temporales.
-- **Rutas legales:** información general sobre derechos y opciones de acompañamiento.
-- **Asistente virtual:** chat en español conectado a un workflow de n8n.
-- **Chat global anónimo:** sala pública en tiempo real, con alias aleatorio temporal y mensajes guardados en MongoDB por un máximo de 24 horas.
-- **Socios:** directorio público de organizaciones colaboradoras, agrupado por tipo y persistido en MongoDB; el panel administrativo permite agregar colaboradores y eliminarlos.
-- **Reportes anónimos:** formulario sin cuenta que guarda tipo de violencia, lugar, descripción y evidencia opcional en MongoDB; genera un folio aleatorio que permite consultar únicamente el estado y la fecha de actualización. El panel administrativo permite revisar los datos, descargar evidencia, cambiar el estado y eliminar reportes.
-- **Administración:** registro limitado a correos autorizados por el backend, inicio de sesión contra MongoDB, validación de sesión al abrir el panel y cierre de sesión. Las contraseñas se almacenan con hash bcrypt y la sesión se conserva en una cookie `HttpOnly`.
-- **Panel administrativo:** gestión de recursos de orientación, colaboradores, solicitudes de orientación y reportes anónimos guardados en MongoDB; los administradores pueden consultar, actualizar o eliminar los datos según el módulo. Las demás tarjetas del panel son demostrativas.
-- **Reportes:** formularios visuales de creación de reportes anónimos y consulta por folio; todavía no se envían ni recuperan desde la API.
+- **Autoevaluación:** cuestionario orientativo y violentómetro interactivo; sus resultados no son un diagnóstico ni una valoración clínica.
+- **Líneas de escucha y centros de ayuda:** información de contacto, centros aliados y mapa incrustado. Verifica los datos y su vigencia antes de depender de ellos.
+- **Recursos de orientación:** directorio público de sitios, videos y documentos guardado en MongoDB.
+- **Chat global:** conversación pública en tiempo real mediante Server-Sent Events. Usa un alias generado para la sesión, limita el envío a 10 mensajes por minuto por IP y conserva los mensajes por hasta 24 horas.
+- **Asistente virtual:** chat en español conectado a un webhook de n8n; requiere Internet y que el servicio externo esté disponible.
+- **Colaboradores:** directorio público persistido en MongoDB y administrable desde el panel.
+- **Solicitudes de orientación:** formulario público que guarda los mensajes de contacto en MongoDB; el panel administrativo permite consultarlos y eliminarlos.
+- **Reportes anónimos:** formulario sin cuenta que guarda tipo de violencia, lugar, descripción y evidencia opcional en MongoDB. Devuelve un folio para consultar solo el estado y la fecha de actualización. El panel administrativo permite revisar el contenido, descargar evidencia, cambiar el estado y eliminar reportes.
+- **Administración:** registro limitado a correos configurados en `ADMIN_EMAILS`, inicio de sesión, validación de sesión al abrir el panel y cierre de sesión. Las contraseñas se almacenan con bcrypt y la sesión en una cookie `HttpOnly` de ocho horas.
+- **Panel administrativo:** gestión de recursos, colaboradores, solicitudes de orientación y reportes. Las métricas de la portada son ilustrativas; no representan datos operativos.
 - **Preferencia de tema:** alternancia entre modo claro y oscuro, guardada localmente en el navegador.
 
 ## Tecnologías
@@ -50,14 +49,14 @@ Las secciones informativas, el cuestionario y el asistente están disponibles de
 - JWT, bcryptjs y express-rate-limit para la autenticación administrativa
 - ESLint
 - Chat de n8n cargado desde jsDelivr
-- Docker Compose para despliegue local de frontend y backend
+- Docker para el backend. La configuración actual de Docker Compose también declara un servicio frontend, pero no existe `Frontend/Dockerfile`, por lo que ese servicio aún no se puede construir.
 
 ## Requisitos
 
 - Node.js **20.19 o posterior** o **22.12 o posterior**.
 - npm.
 - Un navegador moderno.
-- Opcional: Docker con Docker Compose para iniciar el frontend y el backend en contenedores.
+- Opcional: Docker para construir y ejecutar el backend. Docker Compose no funciona de extremo a extremo hasta agregar un Dockerfile del frontend o corregir su configuración de construcción.
 
 ## Instalación y ejecución
 
@@ -80,18 +79,24 @@ npm start
 
 La API escucha en el puerto `3000` por defecto (se puede cambiar con `PORT`) y queda disponible en las interfaces de red del equipo. `GET /health` informa el estado del servidor y MongoDB. Si MongoDB no está configurado o disponible, el servidor sigue iniciando, pero `/health` responde con estado `503` y `"status": "degraded"`. Configura `MONGODB_URI` para conectar MongoDB Atlas; también se acepta `MONGO_URI` por compatibilidad. Si Atlas no conecta, revisa que el clúster esté activo, que las credenciales de base de datos sean correctas y que la IP pública de salida de la máquina donde corre la API esté permitida en **Atlas → Security → Network Access**.
 
-Para habilitar el acceso administrativo, configura en `Backend/.env`:
+Configura `Backend/.env` con los valores necesarios para MongoDB y la autenticación:
 
-- `JWT_SECRET`: una clave aleatoria de al menos 32 caracteres; no la compartas ni la incluyas en el frontend.
-- `ADMIN_EMAILS`: lista separada por comas de los correos autorizados para crear cuentas administrativas.
-- `FRONTEND_URL`: orígenes adicionales autorizados, separados por comas. Los orígenes locales (`localhost`) y las direcciones IPv4 privadas de la LAN en los puertos `5173` y `8080` se autorizan automáticamente para facilitar las pruebas en la red local. En producción, indica aquí el origen exacto del sitio.
-- En producción, configura `NODE_ENV=production`, sirve el sitio mediante HTTPS y usa dominios del mismo sitio para frontend y API, de modo que el navegador envíe la cookie `Secure` con `SameSite=Lax`.
+```dotenv
+MONGODB_URI=mongodb+srv://<usuario>:<contraseña>@<cluster>/<base-de-datos>
+JWT_SECRET=<clave-aleatoria-de-al-menos-32-caracteres>
+ADMIN_EMAILS=admin@ejemplo.com
+FRONTEND_URL=http://localhost:5173
+PORT=3000
+NODE_ENV=development
+```
 
-Los recursos de orientación y la red de colaboradores se inicializan en MongoDB con los datos actuales en el primer arranque que encuentra cada colección vacía. La API los ofrece públicamente en `GET /api/resources` y `GET /api/partners`; agregar, editar y eliminar elementos requiere una sesión administrativa.
+`MONGODB_URI` (o `MONGO_URI`) es necesaria para las funciones respaldadas por la base de datos. `JWT_SECRET` es una clave aleatoria de al menos 32 caracteres; no la compartas ni la incluyas en el frontend. `ADMIN_EMAILS` es una lista separada por comas de los correos autorizados para crear cuentas administrativas. `FRONTEND_URL` acepta una lista separada por comas de orígenes adicionales. Los orígenes locales (`localhost` y `127.0.0.1`) y las direcciones IPv4 privadas de la LAN en los puertos `5173` y `8080` se autorizan automáticamente para pruebas. En producción, indica el origen exacto del sitio. Configura `NODE_ENV=production`, sirve el sitio mediante HTTPS y utiliza dominios compatibles con la cookie de sesión `Secure` y `SameSite=Lax`.
+
+Los recursos de orientación y la red de colaboradores se inicializan con datos predeterminados en MongoDB cuando sus colecciones están vacías y aún no se marcó la inicialización. La API los ofrece públicamente en `GET /api/resources` y `GET /api/partners`; agregar, editar y eliminar elementos requiere una sesión administrativa.
 
 Puedes generar `JWT_SECRET` desde `Backend/` con `node -e "console.log(require('crypto').randomBytes(48).toString('base64url'))"` y copiar el resultado directamente a `Backend/.env`.
 
-El frontend usa automáticamente el mismo nombre de host desde el que se abrió la página para llamar a la API por el puerto `3000`. Para desarrollo, Vite escucha en todas las interfaces y la API autoriza orígenes IPv4 privados de la LAN en los puertos `5173` y `8080`. `VITE_API_URL` es opcional y solo debe configurarse si la API está en un host distinto.
+El frontend usa automáticamente el mismo protocolo y nombre de host desde el que se abrió la página para llamar a la API por el puerto `3000`. Para desarrollo, Vite escucha en todas las interfaces y la API autoriza orígenes IPv4 privados de la LAN en los puertos `5173` y `8080`. `VITE_API_URL` es opcional y debe configurarse si la API está en otro host o puerto.
 
 ### Acceso desde otras computadoras de la red local
 
@@ -111,7 +116,32 @@ El acceso descrito es solo para la red local; no publiques esos puertos en el ro
 | `GET` | `/api/auth/me` | Valida la cookie de sesión y devuelve el perfil administrativo. |
 | `POST` | `/api/auth/logout` | Elimina la cookie de sesión. |
 
-Los intentos de inicio de sesión y registro están limitados por IP. Las credenciales no deben guardarse ni exponerse en el frontend; `Backend/.env` debe mantenerse fuera del control de versiones.
+Los intentos de inicio de sesión y registro están limitados a 10 por IP cada 15 minutos. Las contraseñas administrativas deben tener al menos 12 caracteres y no exceder 72 bytes. Las credenciales no deben guardarse ni exponerse en el frontend; `Backend/.env` debe mantenerse fuera del control de versiones.
+
+### API disponible
+
+Las respuestas de la API son JSON, excepto el flujo SSE del chat y la descarga binaria de evidencia. Las operaciones administrativas requieren la cookie de sesión; `POST /api/auth/logout` elimina la cookie actual.
+
+| Método | Ruta | Acceso y función |
+| --- | --- | --- |
+| `GET` | `/` | Público; información básica de la API. |
+| `GET` | `/health` | Público; estado de la conexión a MongoDB (`503` si está desconectada). |
+| `POST` | `/api/auth/register` | Público con correo autorizado; crea una cuenta administrativa. |
+| `POST` | `/api/auth/login` | Público; inicia sesión administrativa. |
+| `GET` | `/api/auth/me` | Sesión requerida; valida y devuelve el perfil administrativo. |
+| `POST` | `/api/auth/logout` | Elimina la cookie de sesión. |
+| `GET` | `/api/chat/stream` | Público; abre el flujo de mensajes Server-Sent Events. |
+| `POST` | `/api/chat/messages` | Público; envía un mensaje al chat global. |
+| `GET` | `/api/resources` | Público; lista los recursos de orientación. |
+| `POST`, `PUT /:id`, `DELETE /:id` | `/api/auth/resources` | Sesión requerida; gestiona recursos. |
+| `GET` | `/api/partners` | Público; lista colaboradores. |
+| `POST`, `PUT /:id`, `DELETE /:id` | `/api/auth/partners` | Sesión requerida; gestiona colaboradores. |
+| `POST` | `/api/orientation-requests` | Público; envía una solicitud de orientación. |
+| `GET`, `DELETE /:id` | `/api/auth/orientation-requests` | Sesión requerida; consulta o elimina solicitudes. |
+| `POST` | `/api/reports` | Público; crea un reporte anónimo y devuelve su folio. |
+| `GET` | `/api/reports/folio/:folio` | Público; consulta el estado y fechas del reporte. |
+| `GET` | `/api/auth/reports/admin` | Sesión requerida; lista reportes sin el contenido binario de la evidencia. |
+| `PATCH /:id/status`, `GET /:id/evidence`, `DELETE /:id` | `/api/auth/reports/admin` | Sesión requerida; cambia estado, descarga evidencia o elimina un reporte. |
 
 En PowerShell también puedes ejecutar los comandos desde la raíz del repositorio:
 
@@ -145,10 +175,12 @@ npm run build
 ├── Backend/
 │   ├── controllers/           # Lógica de autenticación administrativa
 │   ├── middleware/            # Validación de sesión y rol administrativo
-│   ├── models/                # Modelos de cuentas y mensajes del chat
-│   ├── routes/                 # Rutas de autenticación y chat global
-│   ├── server.js               # API, CORS, MongoDB y health check
-│   └── package.json            # Dependencias del backend
+│   ├── data/                  # Datos predeterminados para inicialización
+│   ├── models/                # Modelos de administración, reportes y contenido
+│   ├── routes/                # Rutas de autenticación, chat y módulos de la API
+│   ├── server.js              # API, CORS, MongoDB y health check
+│   ├── Dockerfile             # Imagen del backend
+│   └── package.json           # Dependencias del backend
 ├── Frontend/
 │   ├── public/                # Recursos estáticos públicos
 │   ├── src/
@@ -156,53 +188,52 @@ npm run build
 │   │   ├── App.jsx            # Navegación y composición principal
 │   │   ├── App.css            # Estilos de la aplicación
 │   │   ├── Autoevaluacion.jsx # Cuestionario y resultado orientativo
-│   │   ├── IA.jsx              # Página del asistente virtual
-│   │   ├── Admin.jsx           # Panel administrativo
-│   │   ├── LoginAdmin.jsx      # Inicio de sesión
-│   │   ├── SingUpAdmin.jsx     # Registro administrativo
-│   │   ├── adminAuthApi.js     # Cliente de autenticación
+│   │   ├── IA.jsx             # Página del asistente virtual
+│   │   ├── Admin.jsx          # Panel administrativo
+│   │   ├── LoginAdmin.jsx     # Inicio de sesión
+│   │   ├── SingUpAdmin.jsx    # Registro administrativo
+│   │   ├── adminAuthApi.js    # Cliente de autenticación
 │   │   └── ...                 # Secciones y componentes de la aplicación
 │   ├── package.json           # Dependencias y scripts npm
 │   └── README.md              # Instrucciones breves del frontend
-└── docker-compose.yml         # Servicios de frontend y backend
+├── JSON(Ejemplo)/             # Datos de ejemplo y modelo entidad-relación
+├── docker-compose.yml         # Configuración declarada para contenedores
+└── README.md                  # Documentación principal
 ```
 
 ## Integraciones y configuración
 
 ### Asistente de n8n
 
-La página de IA carga `@n8n/chat` y sus estilos desde jsDelivr y se conecta a un webhook configurado en `Frontend/src/IA.jsx`. Para que el chat pueda intercambiar mensajes:
+La página de IA carga `@n8n/chat` y sus estilos desde jsDelivr y se conecta a un webhook configurado directamente en `Frontend/src/IA.jsx`. Para que el chat pueda intercambiar mensajes:
 
-1. Activa el workflow correspondiente en n8n.
-2. En el nodo **Chat Trigger**, permite mediante CORS los orígenes donde se servirá la aplicación, tanto de desarrollo como de producción.
-3. Comprueba que el webhook configurado en el frontend sea el endpoint de producción correcto.
-4. Prueba el envío de un mensaje desde cada dominio permitido.
+1. Activa el workflow y el webhook correspondiente en n8n.
+2. Configura el servicio para aceptar solicitudes desde los orígenes donde se servirá la aplicación.
+3. Comprueba que el webhook configurado en el frontend sea el endpoint correcto.
+4. Prueba el envío de un mensaje desde cada dominio de despliegue.
 
 La carga del chat requiere conexión a Internet y disponibilidad de jsDelivr y del servicio de n8n. La URL del webhook está escrita en el código del frontend; antes de desplegar, considera mover la configuración a variables de entorno. Los webhooks publicados en código cliente no deben tratarse como secretos.
 
 ### MongoDB
 
-La API se conecta a MongoDB mediante `MONGODB_URI` (o `MONGO_URI`) del archivo `Backend/.env`. `docker-compose.yml` construye el backend y el frontend, y proporciona el archivo de entorno del backend al contenedor. La disponibilidad de la API no garantiza que Atlas sea accesible: configura la lista de acceso de red de Atlas para el entorno desde donde se ejecuta el backend.
+La API se conecta a MongoDB mediante `MONGODB_URI` (o `MONGO_URI`) del archivo `Backend/.env`. La disponibilidad de la API no garantiza que Atlas sea accesible: configura la lista de acceso de red de Atlas para el entorno desde donde se ejecuta el backend.
 
 ### Chat global anónimo
 
 El chat global no requiere cuenta, correo ni nombre real. El navegador genera un alias aleatorio y lo conserva en `sessionStorage` durante esa sesión; el backend almacena únicamente el alias, el texto y las fechas de cada mensaje, sin crear perfiles ni asociar un identificador de usuaria. Los mensajes se actualizan en vivo mediante Server-Sent Events y MongoDB los elimina con un índice TTL al cumplir 24 horas. La eliminación TTL de MongoDB es automática, aunque el proceso de limpieza puede tardar un poco más de 24 horas; los mensajes vencidos no se entregan en el chat. Como medida antiabuso, el límite de 10 mensajes por minuto mantiene un contador temporal por IP en la memoria del proceso (no en MongoDB); los registros que mantenga el proveedor de alojamiento quedan fuera de la aplicación.
 
-Para probarlo, inicia MongoDB/API y el frontend, y configura `VITE_API_URL` si la API no está en `http://localhost:3000`. La opción de tema privado o anónimo no evita que una usuaria incluya información personal voluntariamente en un mensaje; la interfaz recomienda no compartirla.
+Para probarlo, inicia MongoDB/API y el frontend, y configura `VITE_API_URL` si la API no está en el mismo host que el frontend y el puerto `3000`. El alias no identifica a una persona, pero el chat es público y no evita que alguien incluya información personal voluntariamente; la interfaz recomienda no compartirla.
 
-Con Docker Compose instalado y `Backend/.env` configurado, los servicios se pueden iniciar y detener desde la raíz del repositorio:
+### Docker Compose (incompleto)
 
-```sh
-docker compose up -d
-docker compose down
-```
+`docker-compose.yml` declara el backend en el puerto `3000` y el frontend en el `8080`, pero no existe `Frontend/Dockerfile`. Por eso, `docker compose up --build` no puede construir todos los servicios tal como está configurado actualmente. El backend sí cuenta con `Backend/Dockerfile`; para desarrollo local, usa los comandos npm anteriores. También se requiere `Backend/.env` para que Compose pueda cargar la configuración del backend.
 
-El frontend se publica en el puerto `8080` y la API en el `3000`, según el compose actual. Para que las cookies de sesión funcionen en producción, configura dominios/orígenes compatibles, HTTPS y `FRONTEND_URL` según el despliegue.
+Al completar la imagen del frontend, valida que los puertos publicados, `VITE_API_URL`, CORS y la configuración de cookies coincidan con el despliegue. En producción, usa HTTPS y `FRONTEND_URL` con el origen público del sitio.
 
 ## Privacidad y seguridad
 
 - No ingreses ni compartas datos personales o información que identifique a alguien en el chat ni en los reportes anónimos.
-- El chat transmite mensajes al workflow configurado en n8n; revisa sus controles de acceso, retención de datos y avisos de privacidad antes de usarlo con personas usuarias.
+- El asistente virtual envía los mensajes al servicio configurado en n8n; revisa sus controles de acceso, retención de datos y avisos de privacidad antes de usarlo con personas usuarias.
 - La autoevaluación se presenta solo como una reflexión orientativa. La herramienta no sustituye una valoración profesional y su cálculo requiere revisión antes de cualquier uso clínico o institucional.
 - Las cuentas administrativas solo se pueden registrar si su correo figura en `ADMIN_EMAILS`. Usa una contraseña única y mantén `JWT_SECRET` fuera del frontend y del control de versiones.
 - La sesión administrativa expira en ocho horas y se guarda en una cookie `HttpOnly`; en producción también requiere HTTPS para activar el atributo `Secure`.
