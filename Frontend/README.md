@@ -13,7 +13,7 @@ npm run dev
 
 En Vercel, configura `Frontend` como **Root Directory**. Usa el comando de build
 `npm run build` y el directorio de salida `dist`. `vercel.json` reenvía las
-peticiones `/api/*` a `https://proyecto-nebula-1.onrender.com`; no agregues el
+peticiones `/api/*` a `https://proyecto-nebula-3.onrender.com`; no agregues el
 puerto `10000`, ya que Render lo utiliza internamente y publica la API por HTTPS
 en el puerto estándar.
 
