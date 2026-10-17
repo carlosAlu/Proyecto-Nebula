@@ -3,6 +3,6 @@ const currentHost = typeof window === 'undefined' ? 'localhost' : window.locatio
 const currentProtocol = typeof window === 'undefined' ? 'http:' : window.location.protocol
 const defaultApiUrl = import.meta.env.PROD
   ? 'https://proyecto-nebula-1.onrender.com'
-  : `${currentProtocol}//${currentHost}:3000`
+  : `${currentProtocol}//${currentHost}:10000`
 
 export const API_URL = (configuredApiUrl || defaultApiUrl).replace(/\/$/, '')
