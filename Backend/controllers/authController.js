@@ -21,7 +21,7 @@ function getCookieOptions() {
   return {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
-    sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+    sameSite: "lax",
     path: process.env.NODE_ENV === "production" ? "/" : "/api/auth"
   };
 }

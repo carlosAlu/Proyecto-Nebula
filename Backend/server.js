@@ -155,7 +155,7 @@ async function connectDatabase() {
 // Inicia el servidor HTTP y comienza la conexión a la base de datos.
 function startServer() {
     const port = Number(process.env.PORT) || 3000;
-    const server = app.listen(port, "0.0.0.0", () => {
+    const server = app.listen(port, () => {
         console.log(`Nebula API ejecutándose en el puerto ${port}.`);
     });
 
