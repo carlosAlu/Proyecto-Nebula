@@ -39,7 +39,7 @@ function verificarToken(req, res, next) {
     res.clearCookie(COOKIE_NAME, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
-      sameSite: "lax",
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
       path: process.env.NODE_ENV === "production" ? "/" : "/api/auth"
     });
     return res.status(401).json({ mensaje: "La sesión expiró. Inicia sesión nuevamente." });

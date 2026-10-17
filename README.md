@@ -77,7 +77,7 @@ npm install
 npm start
 ```
 
-La API escucha en el puerto `3000` por defecto (se puede cambiar con `PORT`) y queda disponible en las interfaces de red del equipo. `GET /health` informa el estado del servidor y MongoDB. Si MongoDB no está configurado o disponible, el servidor sigue iniciando, pero `/health` responde con estado `503` y `"status": "degraded"`. Configura `MONGODB_URI` para conectar MongoDB Atlas; también se acepta `MONGO_URI` por compatibilidad. Si Atlas no conecta, revisa que el clúster esté activo, que las credenciales de base de datos sean correctas y que la IP pública de salida de la máquina donde corre la API esté permitida en **Atlas → Security → Network Access**.
+La API escucha en el puerto `3000` por defecto para desarrollo local (se puede cambiar con `PORT`) y queda disponible en las interfaces de red del equipo. En Render, el servidor usa el puerto proporcionado automáticamente en `PORT` (normalmente `10000`); la URL pública se usa sin añadir `:10000`. `GET /health` informa el estado del servidor y MongoDB. Si MongoDB no está configurado o disponible, el servidor sigue iniciando, pero `/health` responde con estado `503` y `"status": "degraded"`. Configura `MONGODB_URI` para conectar MongoDB Atlas; también se acepta `MONGO_URI` por compatibilidad. Si Atlas no conecta, revisa que el clúster esté activo, que las credenciales de base de datos sean correctas y que la IP pública de salida de la máquina donde corre el backend esté permitida en **Atlas → Security → Network Access**.
 
 Configura `Backend/.env` con los valores necesarios para MongoDB y la autenticación:
 
@@ -90,13 +90,19 @@ PORT=3000
 NODE_ENV=development
 ```
 
-`MONGODB_URI` (o `MONGO_URI`) es necesaria para las funciones respaldadas por la base de datos. `JWT_SECRET` es una clave aleatoria de al menos 32 caracteres; no la compartas ni la incluyas en el frontend. `ADMIN_EMAILS` es una lista separada por comas de los correos autorizados para crear cuentas administrativas. `FRONTEND_URL` acepta una lista separada por comas de orígenes adicionales. Los orígenes locales (`localhost` y `127.0.0.1`) y las direcciones IPv4 privadas de la LAN en los puertos `5173` y `8080` se autorizan automáticamente para pruebas. En producción, indica el origen exacto del sitio. Configura `NODE_ENV=production`, sirve el sitio mediante HTTPS y utiliza dominios compatibles con la cookie de sesión `Secure` y `SameSite=Lax`.
+`MONGODB_URI` (o `MONGO_URI`) es necesaria para las funciones respaldadas por la base de datos. `JWT_SECRET` es una clave aleatoria de al menos 32 caracteres; no la compartas ni la incluyas en el frontend. `ADMIN_EMAILS` es una lista separada por comas de los correos autorizados para crear cuentas administrativas. `FRONTEND_URL` acepta una lista separada por comas de orígenes adicionales. Los orígenes locales (`localhost` y `127.0.0.1`) y las direcciones IPv4 privadas de la LAN en los puertos `5173` y `8080` se autorizan automáticamente para pruebas. En producción, indica el origen exacto del sitio. Configura `NODE_ENV=production`, sirve el sitio mediante HTTPS y permite cookies `Secure` y `SameSite=None` para autenticar solicitudes entre dominios.
 
 Los recursos de orientación y la red de colaboradores se inicializan con datos predeterminados en MongoDB cuando sus colecciones están vacías y aún no se marcó la inicialización. La API los ofrece públicamente en `GET /api/resources` y `GET /api/partners`; agregar, editar y eliminar elementos requiere una sesión administrativa.
 
 Puedes generar `JWT_SECRET` desde `Backend/` con `node -e "console.log(require('crypto').randomBytes(48).toString('base64url'))"` y copiar el resultado directamente a `Backend/.env`.
 
-El frontend usa automáticamente el mismo protocolo y nombre de host desde el que se abrió la página para llamar a la API por el puerto `3000`. Para desarrollo, Vite escucha en todas las interfaces y la API autoriza orígenes IPv4 privados de la LAN en los puertos `5173` y `8080`. `VITE_API_URL` es opcional y debe configurarse si la API está en otro host o puerto.
+El frontend usa `VITE_API_URL` cuando está configurada. Sin esa variable, usa `http://localhost:3000` en desarrollo local y `https://proyecto-nebula-1.onrender.com` en otros hosts. Para desarrollo, Vite escucha en todas las interfaces y la API autoriza orígenes IPv4 privados de la LAN en los puertos `5173` y `8080`.
+
+### Despliegue separado en Render y Vercel
+
+- **Render (API):** configura `Backend` como *Root Directory*, `npm install` como *Build Command* y `npm start` como *Start Command*. Render asigna `PORT` (normalmente `10000`); no establezcas una URL con `:10000` en el navegador. Añade `MONGODB_URI`, `JWT_SECRET`, `ADMIN_EMAILS`, `FRONTEND_URL` y `NODE_ENV=production` como variables de entorno del servicio. `FRONTEND_URL` debe ser el origen exacto de la web publicada, sin ruta, por ejemplo `https://tu-sitio.vercel.app`.
+- **Vercel (frontend):** configura `Frontend` como *Root Directory*, `npm run build` como comando de construcción y `dist` como directorio de salida. En las variables de entorno, configura `VITE_API_URL=https://proyecto-nebula-1.onrender.com` y vuelve a desplegar para que se aplique al bundle.
+- La sesión administrativa usa una cookie `Secure` y `SameSite=None` en producción para permitir solicitudes con credenciales entre el frontend y la API en dominios distintos. El navegador también debe permitir cookies de terceros para esa combinación de dominios; para evitar esa dependencia, publica ambos servicios bajo el mismo sitio raíz.
 
 ### Acceso desde otras computadoras de la red local
 
@@ -222,11 +228,11 @@ La API se conecta a MongoDB mediante `MONGODB_URI` (o `MONGO_URI`) del archivo `
 
 El chat global no requiere cuenta, correo ni nombre real. El navegador genera un alias aleatorio y lo conserva en `sessionStorage` durante esa sesión; el backend almacena únicamente el alias, el texto y las fechas de cada mensaje, sin crear perfiles ni asociar un identificador de usuaria. Los mensajes se actualizan en vivo mediante Server-Sent Events y MongoDB los elimina con un índice TTL al cumplir 24 horas. La eliminación TTL de MongoDB es automática, aunque el proceso de limpieza puede tardar un poco más de 24 horas; los mensajes vencidos no se entregan en el chat. Como medida antiabuso, el límite de 10 mensajes por minuto mantiene un contador temporal por IP en la memoria del proceso (no en MongoDB); los registros que mantenga el proveedor de alojamiento quedan fuera de la aplicación.
 
-Para probarlo, inicia MongoDB/API y el frontend, y configura `VITE_API_URL` si la API no está en el mismo host que el frontend y el puerto `3000`. El alias no identifica a una persona, pero el chat es público y no evita que alguien incluya información personal voluntariamente; la interfaz recomienda no compartirla.
+Para probarlo, inicia MongoDB/API y el frontend, y configura `VITE_API_URL` si la API no está en `http://localhost:3000` durante el desarrollo local. En producción, el frontend usa la URL de Render descrita arriba o la URL explícita de `VITE_API_URL`. El alias no identifica a una persona, pero el chat es público y no evita que alguien incluya información personal voluntariamente; la interfaz recomienda no compartirla.
 
 ### Docker Compose (incompleto)
 
-`docker-compose.yml` declara el backend en el puerto `3000` y el frontend en el `8080`, pero no existe `Frontend/Dockerfile`. Por eso, `docker compose up --build` no puede construir todos los servicios tal como está configurado actualmente. El backend sí cuenta con `Backend/Dockerfile`; para desarrollo local, usa los comandos npm anteriores. También se requiere `Backend/.env` para que Compose pueda cargar la configuración del backend.
+`docker-compose.yml` declara el backend en el puerto `10000` y el frontend en el `8080`, pero no existe `Frontend/Dockerfile`. Por eso, `docker compose up --build` no puede construir todos los servicios tal como está configurado actualmente. El backend sí cuenta con `Backend/Dockerfile`; para desarrollo local, usa los comandos npm anteriores. También se requiere `Backend/.env` para que Compose pueda cargar la configuración del backend.
 
 Al completar la imagen del frontend, valida que los puertos publicados, `VITE_API_URL`, CORS y la configuración de cookies coincidan con el despliegue. En producción, usa HTTPS y `FRONTEND_URL` con el origen público del sitio.
 
