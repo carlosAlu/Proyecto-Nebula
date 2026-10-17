@@ -4,9 +4,7 @@ services:
       context: ./Backend
     image: banco-nexus-backend:latest
     ports:
-      - "10000:10000"
-    environment:
-      PORT: 10000
+      - "3000:3000"
     env_file:
       - ./Backend/.env
     deploy:
