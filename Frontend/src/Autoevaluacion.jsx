@@ -414,6 +414,7 @@ const riskLevels = {
 
 // Orden numérico usado para elegir el nivel de mayor riesgo señalado.
 const levelOrder = { warning: 1, reaction: 2, danger: 3 }
+const MAX_QUESTIONS = 15
 
 // Calcula puntuación normalizada, conductas señaladas y el nivel más alto respondido.
 function getResult(responses, questionOrder) {
@@ -453,7 +454,7 @@ function getResult(responses, questionOrder) {
 function Autoevaluacion({ onClose, onFindSupport }) {
   // Conserva el orden adaptativo, el avance y las respuestas mientras el modal está abierto.
   const [questionOrder, setQuestionOrder] = useState(
-    questions.filter(({ adaptive }) => !adaptive).map(({ id }) => id),
+    questions.filter(({ adaptive }) => !adaptive).map(({ id }) => id).slice(0, MAX_QUESTIONS),
   )
   const [currentIndex, setCurrentIndex] = useState(0)
   const [responses, setResponses] = useState([])
@@ -504,19 +505,14 @@ function Autoevaluacion({ onClose, onFindSupport }) {
       ? adaptiveIds[Math.floor(Math.random() * adaptiveIds.length)]
       : null
 
-    if (adaptiveId) {
-      setQuestionOrder([
+    if (adaptiveId || relatedCoreId) {
+      const nextQuestionOrder = [
         ...questionOrder.slice(0, currentIndex + 1),
-        adaptiveId,
+        ...(adaptiveId ? [adaptiveId] : []),
         ...(relatedCoreId ? [relatedCoreId] : []),
         ...remainingIds.filter((id) => id !== adaptiveId && id !== relatedCoreId),
-      ])
-    } else if (relatedCoreId) {
-      setQuestionOrder([
-        ...questionOrder.slice(0, currentIndex + 1),
-        relatedCoreId,
-        ...remainingIds.filter((id) => id !== relatedCoreId),
-      ])
+      ]
+      setQuestionOrder(nextQuestionOrder.slice(0, MAX_QUESTIONS))
     }
 
     setCurrentIndex((index) => index + 1)
@@ -532,7 +528,9 @@ function Autoevaluacion({ onClose, onFindSupport }) {
 
   // Reinicia el cuestionario y devuelve el orden original de las preguntas.
   const restart = () => {
-    setQuestionOrder(questions.filter(({ adaptive }) => !adaptive).map(({ id }) => id))
+    setQuestionOrder(
+      questions.filter(({ adaptive }) => !adaptive).map(({ id }) => id).slice(0, MAX_QUESTIONS),
+    )
     setCurrentIndex(0)
     setResponses([])
     setSelectedAnswer(null)
